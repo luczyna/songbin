@@ -10,6 +10,10 @@ export class StorageService {
     private localStorage: LocalStorageService
   ) { }
 
+  public clearSongs(): void {
+    this.localStorage.remove('songs');
+  }
+
   public getSongs(): Array<Song> {
     let songs: Array<Song> = [];
     let storedSongs = this.localStorage.get('songs');
@@ -28,7 +32,8 @@ export class StorageService {
     return songs;
   }
 
-  public saveSongs(collection) {
+  public saveSongs(collection): void {
     this.localStorage.set('songs', collection);
   }
+
 }

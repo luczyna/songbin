@@ -7,6 +7,7 @@ import { Song } from '../models/song';
 describe('StorageService', () => {
   let service: StorageService;
   let importedModule: LocalStorageService;
+  let testData = [ {name: 'test', url: 'fake.url'} ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -36,9 +37,7 @@ describe('StorageService', () => {
     });
 
     it('should give me some Songs when there are some in localStorage', () => {
-      importedModule.set('songs',
-        [ {name: 'test', url: 'console.log'} ]
-      );
+      importedModule.set('songs', testData);
 
       let result = service.getSongs();
       expect(result.length).toBe(1);
@@ -51,12 +50,36 @@ describe('StorageService', () => {
     });
 
     it('should save data to localStorage under the key "songs"', () => {
-      let test = [ {name: 'test', url: 'fake.url'} ];
-      service.saveSongs(test);
+      service.saveSongs(testData);
       let result = importedModule.get('songs');
-      expect(result.length).toBe(test.length);
-      expect(result[0].name).toBe(test[0].name);
-      expect(result[0].url).toBe(test[0].url);
+
+      expect(result.length).toBe(testData.length);
+      expect(result[0].name).toBe(testData[0].name);
+      expect(result[0].url).toBe(testData[0].url);
+    });
+  });
+
+  describe('#clearSongs', () => {
+    it('should be available', () => {
+      expect(service.clearSongs).toBeDefined();
+    });
+
+    it('should remove all storage under the name of "songs"', () => {
+      service.saveSongs(testData);
+      expect(service.getSongs().length).toBe(1);
+
+      service.clearSongs();
+      expect(service.getSongs().length).toBe(0);
+    });
+
+    it('should not remove any other storage under different keys', () => {
+      var goldenKey = 'this should still be here';
+      importedModule.set('poop', goldenKey);
+      importedModule.set('songs', testData);
+      expect(service.getSongs().length).toBe(1);
+
+      service.clearSongs();
+      expect(importedModule.get('poop')).toBe(goldenKey);
     });
   });
 });
