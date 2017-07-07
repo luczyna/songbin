@@ -4,5 +4,5 @@ export class Song {
 }
 
 export class SongCollection {
-  songs: Array<Song>;
+  public songs: Array<Song>;
 }
