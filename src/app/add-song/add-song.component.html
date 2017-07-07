@@ -21,3 +21,10 @@
 
   <button type="submit" [disabled]="songForm.status === 'INVALID'">add song</button>
 </form>
+
+
+<ul>
+  <li *ngIf="!collection.songs.length">no songs have been saved</li>
+
+  <li *ngFor="let song of collection.songs">{{song.name}} - <code>{{song.url}}</code></li>
+</ul>
