@@ -1,0 +1,23 @@
+<h2>Add a new song</h2>
+
+<p><em>Note: this will only work with Youtube links for now. Please check back later for support for other services.</em></p>
+
+<pre><strong>Form Status</strong>: {{songForm.status | json}}</pre>
+
+<form [formGroup]="songForm" (ngSubmit)="addingSong()" novalidate>
+  <p>
+    <label>
+      <span>Enter the url for the song</span><br>
+      <input type="url" formControlName="url">
+    </label>
+  </p>
+
+  <p>
+    <label>
+      <span>Name the song</span><br>
+      <input type="text" formControlName="name">
+    </label>
+  </p>
+
+  <button type="submit" [disabled]="songForm.status === 'INVALID'">add song</button>
+</form>
