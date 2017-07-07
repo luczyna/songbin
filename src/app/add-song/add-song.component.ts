@@ -23,17 +23,25 @@ export class AddSongComponent implements OnInit {
   ngOnInit() {
   }
 
-  addingSong(song, valid) {
-    console.log('submitting song');
-    console.log(song);
-    console.log(valid);
+  addingSong() {
+    const newSong: Song = {
+      // omg wut
+      // name: this.songForm.value.name as string,
+      // url: this.songForm.value.url as string
+      name: this.songForm.get('name').value,
+      url: this.songForm.get('url').value
+    };
   }
 
   buildForm() {
+    let combo = Validators.compose([
+      Validators.required,
+      this.urlValidator
+    ]);
+
     this.songForm = this.formBuilder.group({
       name: ['', Validators.required],
-      url: ['', Validators.compose([Validators.required, this.urlValidator])]
-    })
+      url: ['', combo]
+    });
   }
-
 }
