@@ -2,8 +2,6 @@
 
 <p><em>Note: this will only work with Youtube links for now. Please check back later for support for other services.</em></p>
 
-<pre><strong>Form Status</strong>: {{songForm.status | json}}</pre>
-
 <form [formGroup]="songForm" (ngSubmit)="addingSong()" novalidate>
   <p>
     <label>
@@ -21,10 +19,3 @@
 
   <button type="submit" [disabled]="songForm.status === 'INVALID'">add song</button>
 </form>
-
-
-<ul>
-  <li *ngIf="!collection.songs.length">no songs have been saved</li>
-
-  <li *ngFor="let song of collection.songs">{{song.name}} - <code>{{song.url}}</code></li>
-</ul>

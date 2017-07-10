@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SongListComponent } from './song-list.component';
+import { StorageService } from '../storage/storage.service';
+import { LocalStorageService } from 'ngx-store';
 
 describe('SongListComponent', () => {
   let component: SongListComponent;
@@ -8,7 +10,8 @@ describe('SongListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SongListComponent ]
+      declarations: [ SongListComponent ],
+      providers: [ StorageService, LocalStorageService ]
     })
     .compileComponents();
   }));
