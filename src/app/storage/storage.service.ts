@@ -22,6 +22,22 @@ export class StorageService {
     };
   }
 
+  public getSong(songId: string): Promise<Song> {
+    let matchedSong: Song;
+
+    this.collection.songs.forEach((song: Song) => {
+      if (song.id === songId) {
+        matchedSong = song;
+      }
+    });
+
+    if (typeof matchedSong !== 'undefined') {
+      return Promise.resolve(matchedSong);
+    } else {
+      return Promise.reject('no songs match');
+    }
+  }
+
   public getSongs(): Array<Song> {
     return this.collection.songs;
   }
