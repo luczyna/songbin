@@ -8,12 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AddSongComponent } from './add-song/add-song.component';
 import { SongListComponent } from './song-list/song-list.component';
+import { SongDetailComponent } from './song-detail/song-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddSongComponent,
-    SongListComponent
+    SongListComponent,
+    SongDetailComponent
   ],
   imports: [
     BrowserModule,
