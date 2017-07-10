@@ -38,7 +38,8 @@ export class StorageService {
       storedSongs.forEach((song) => {
         let datum: Song = {
           name: song.name,
-          url: song.url
+          url: song.url,
+          id: song.id
         };
 
         songs.push(datum);

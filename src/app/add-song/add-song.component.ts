@@ -7,8 +7,7 @@ import { StorageService } from '../storage/storage.service';
 @Component({
   selector: 'app-add-song',
   templateUrl: './add-song.component.html',
-  styleUrls: ['./add-song.component.scss'],
-  providers: [ StorageService ]
+  styleUrls: ['./add-song.component.scss']
 })
 
 export class AddSongComponent implements OnInit {
@@ -32,7 +31,9 @@ export class AddSongComponent implements OnInit {
   addingSong() {
     const newSong: Song = {
       name: this.songForm.get('name').value,
-      url: this.songForm.get('url').value
+      url: this.songForm.get('url').value,
+      // id: this.songForm.get('name').value.replace(' ', '-')
+      id: String(Math.floor(Math.random() * 10000))
     };
 
     this.collection.push(newSong);
