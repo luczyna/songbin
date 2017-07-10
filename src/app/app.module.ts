@@ -9,13 +9,15 @@ import { AppComponent } from './app.component';
 import { AddSongComponent } from './add-song/add-song.component';
 import { SongListComponent } from './song-list/song-list.component';
 import { SongDetailComponent } from './song-detail/song-detail.component';
+import { MissingSongComponent } from './missing-song/missing-song.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddSongComponent,
     SongListComponent,
-    SongDetailComponent
+    SongDetailComponent,
+    MissingSongComponent
   ],
   imports: [
     BrowserModule,
