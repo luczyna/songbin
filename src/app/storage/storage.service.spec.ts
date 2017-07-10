@@ -1,5 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { StorageService } from './storage.service';
 import { LocalStorageService } from 'ngx-store';
 import { Song } from '../models/song';
@@ -10,12 +8,8 @@ describe('StorageService', () => {
   let testData = [ {name: 'test', url: 'fake.url'} ];
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [StorageService, LocalStorageService, Song]
-    });
-
-    service = TestBed.get(StorageService);
-    importedModule = TestBed.get(LocalStorageService);
+    importedModule = new LocalStorageService();
+    service = new StorageService(importedModule);
   });
 
   afterEach(() => {
@@ -36,11 +30,16 @@ describe('StorageService', () => {
       expect(service.getSongs().length).toBe(0);
     });
 
-    it('should give me some Songs when there are some in localStorage', () => {
-      importedModule.set('songs', testData);
+    describe('when there are already songs in localStorage', () => {
+      beforeEach(() => {
+        importedModule.set('songs', testData);
+        service = new StorageService(importedModule);
+      });
 
-      let result = service.getSongs();
-      expect(result.length).toBe(1);
+      it('should give me some Songs', () => {
+        let result = service.getSongs();
+        expect(result.length).toBe(1);
+      });
     });
   });
 
@@ -50,7 +49,11 @@ describe('StorageService', () => {
     });
 
     it('should save data to localStorage under the key "songs"', () => {
-      service.saveSongs(testData);
+      service.collection = {
+        songs: testData
+      };
+
+      service.saveSongs();
       let result = importedModule.get('songs');
 
       expect(result.length).toBe(testData.length);
@@ -60,12 +63,16 @@ describe('StorageService', () => {
   });
 
   describe('#clearSongs', () => {
+    beforeEach(() => {
+      importedModule.set('songs', testData);
+      service = new StorageService(importedModule);
+    });
+
     it('should be available', () => {
       expect(service.clearSongs).toBeDefined();
     });
 
     it('should remove all storage under the name of "songs"', () => {
-      service.saveSongs(testData);
       expect(service.getSongs().length).toBe(1);
 
       service.clearSongs();
@@ -73,9 +80,8 @@ describe('StorageService', () => {
     });
 
     it('should not remove any other storage under different keys', () => {
-      var goldenKey = 'this should still be here';
+      let goldenKey = 'this should still be here';
       importedModule.set('poop', goldenKey);
-      importedModule.set('songs', testData);
       expect(service.getSongs().length).toBe(1);
 
       service.clearSongs();

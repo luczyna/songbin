@@ -1,0 +1,7 @@
+<ul *ngIf="collection.length">
+  <li *ngFor="let song of collection">{{song.name}} - <code>{{song.url}}</code></li>
+</ul>
+
+<div *ngIf="!collection.length">
+  <p>Nothing has been saved yet. Let's <a routerLink="/new">go add a new song</a>.</p>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Song, SongCollection } from '../models/song';
+import { Song } from '../models/song';
 import { StorageService } from '../storage/storage.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { StorageService } from '../storage/storage.service';
 })
 
 export class AddSongComponent implements OnInit {
-  collection: SongCollection;
+  collection: Array<Song>;
   songForm: FormGroup;
 
   // https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
@@ -24,24 +24,19 @@ export class AddSongComponent implements OnInit {
     private storage: StorageService
   ) {
     this.buildForm();
-    this.collection = {
-      songs: this.storage.getSongs()
-    };
+    this.collection = this.storage.getSongs();
   }
 
   ngOnInit() {}
 
   addingSong() {
     const newSong: Song = {
-      // omg wut
-      // name: this.songForm.value.name as string,
-      // url: this.songForm.value.url as string
       name: this.songForm.get('name').value,
       url: this.songForm.get('url').value
     };
 
-    this.collection.songs.push(newSong);
-    this.storage.saveSongs(this.collection.songs);
+    this.collection.push(newSong);
+    this.storage.saveSongs();
     this.revert();
   }
 
