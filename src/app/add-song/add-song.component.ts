@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
 
 import { Song } from '../models/song';
 import { StorageService } from '../storage/storage.service';
+import { ConstantService } from '../constant/constant.service';
 
 @Component({
   selector: 'app-add-song',
@@ -13,15 +14,14 @@ import { StorageService } from '../storage/storage.service';
 export class AddSongComponent implements OnInit {
   collection: Array<Song>;
   songForm: FormGroup;
-
-  // https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
-  urlRegex: RegExp = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/);
-  urlValidator = Validators.pattern(this.urlRegex);
+  urlValidator: ValidatorFn;
 
   constructor(
+    private constant: ConstantService,
     private formBuilder: FormBuilder,
     private storage: StorageService
   ) {
+    this.urlValidator = this.constant.getUrlValidator();
     this.buildForm();
     this.collection = this.storage.getSongs();
   }
@@ -42,14 +42,9 @@ export class AddSongComponent implements OnInit {
   }
 
   buildForm() {
-    let combo = Validators.compose([
-      Validators.required,
-      this.urlValidator
-    ]);
-
     this.songForm = this.formBuilder.group({
       name: ['', Validators.required],
-      url: ['', combo]
+      url: ['', this.urlValidator]
     });
   }
 
