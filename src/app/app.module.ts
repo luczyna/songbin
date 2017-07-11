@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { WebStorageModule } from 'ngx-store';
+import { YoutubePlayerModule } from 'ng2-youtube-player';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,7 +24,8 @@ import { MissingSongComponent } from './missing-song/missing-song.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    WebStorageModule
+    WebStorageModule,
+    YoutubePlayerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
