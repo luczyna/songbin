@@ -2,8 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AddSongComponent } from './add-song.component';
-import { StorageService } from '../storage/storage.service';
+import { ConstantService } from '../constant/constant.service';
 import { LocalStorageService } from 'ngx-store';
+import { StorageService } from '../storage/storage.service';
 
 
 describe('AddSongComponent', () => {
@@ -12,9 +13,9 @@ describe('AddSongComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule],
+      imports: [ ReactiveFormsModule, FormsModule ],
       declarations: [ AddSongComponent ],
-      providers: [ StorageService, LocalStorageService ]
+      providers: [ StorageService, LocalStorageService, ConstantService ]
     })
     .compileComponents();
   }));
