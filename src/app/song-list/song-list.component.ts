@@ -6,8 +6,7 @@ import { StorageService } from '../storage/storage.service';
 @Component({
   selector: 'app-song-list',
   templateUrl: './song-list.component.html',
-  styleUrls: ['./song-list.component.scss'],
-  providers: [ StorageService ]
+  styleUrls: ['./song-list.component.scss']
 })
 export class SongListComponent implements OnInit {
   collection: Array<Song>;

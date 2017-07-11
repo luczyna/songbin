@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SongListComponent } from './song-list.component';
+import { RouterLinkStubDirective } from '../../testing/router-stubs';
 import { StorageService } from '../storage/storage.service';
 import { LocalStorageService } from 'ngx-store';
 
@@ -10,7 +11,7 @@ describe('SongListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SongListComponent ],
+      declarations: [ SongListComponent, RouterLinkStubDirective ],
       providers: [ StorageService, LocalStorageService ]
     })
     .compileComponents();
