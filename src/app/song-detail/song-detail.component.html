@@ -1,5 +1,25 @@
-<div *ngIf="song">
-  <h3>{{song.name}}</h3>
+<form *ngIf="song" [formGroup]="songForm" (ngSubmit)="saveSongEdits()">
+  <p>
+    <button type="button" (click)="toggleEditing()">
+      {{editing ? 'cancel song edits' : 'edit song details'}}
+    </button>
+
+    <button *ngIf="editing" type="submit" [disabled]="songForm.status !== 'VALID'">
+      save edits
+    </button>
+  </p>
+  <pre>{{songForm.status | json}}</pre>
+
+  <h3>
+    <input type="text" formControlName="name">
+  </h3>
+
+  <p [hidden]="!editing">
+    <label>
+      song url
+      <input type="text" formControlName="url">
+    </label>
+  </p>
 
   <yt-player [ytid]="song.url"></yt-player>
-</div>
+</form>
