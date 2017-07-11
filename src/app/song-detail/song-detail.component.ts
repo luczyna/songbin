@@ -14,7 +14,6 @@ import { StorageService } from '../storage/storage.service';
 })
 export class SongDetailComponent implements OnInit {
   song: Song;
-  test: string = 'omg where am I';
 
   constructor(
     private route: ActivatedRoute,

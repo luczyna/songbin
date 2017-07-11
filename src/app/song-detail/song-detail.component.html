@@ -1,3 +1,5 @@
 <div *ngIf="song">
   <h3>{{song.name}}</h3>
+
+  <yt-player [ytid]="song.url"></yt-player>
 </div>
