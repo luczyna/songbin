@@ -11,6 +11,7 @@ import { AddSongComponent } from './add-song/add-song.component';
 import { SongListComponent } from './song-list/song-list.component';
 import { SongDetailComponent } from './song-detail/song-detail.component';
 import { MissingSongComponent } from './missing-song/missing-song.component';
+import { YoutubePlayerComponent } from './youtube-player/youtube-player.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MissingSongComponent } from './missing-song/missing-song.component';
     AddSongComponent,
     SongListComponent,
     SongDetailComponent,
-    MissingSongComponent
+    MissingSongComponent,
+    YoutubePlayerComponent
   ],
   imports: [
     BrowserModule,
