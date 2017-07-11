@@ -31,14 +31,44 @@ describe('StorageService', () => {
     });
 
     describe('when there are already songs in localStorage', () => {
-      beforeEach(() => {
-        importedModule.set('songs', testData);
-        service = new StorageService(importedModule);
-      });
+      beforeEach(createMockData);
 
       it('should give me some Songs', () => {
         let result = service.getSongs();
         expect(result.length).toBe(1);
+      });
+    });
+  });
+
+  describe('#getSong', () => {
+    beforeEach(createMockData);
+
+    it('should be available', () => {
+      expect(service.getSong).toBeDefined();
+    });
+
+    describe('when looking for a song that exists', () => {
+      it('should return a Song', (done: any) => {
+        service.getSong('ABCDE').then((result) => {
+          expect(result.id).toBe(testData[0].id);
+          expect(result.name).toBe(testData[0].name);
+          expect(result.url).toBe(testData[0].url);
+          done();
+        });
+      });
+    });
+
+    describe('when looking for a song that does not exists', () => {
+      it('should return nothing', (done: any) => {
+        service.getSong('missing').then((result) => {
+          // THIS SHOULD NOT BE CALLED, IF IT IS
+          // THEN THIS TEST WILL FAIL
+          expect(result).toBeDefined();
+          done();
+        }, (error) => {
+          expect(error).toBeDefined();
+          done();
+        });
       });
     });
   });
@@ -88,4 +118,11 @@ describe('StorageService', () => {
       expect(importedModule.get('poop')).toBe(goldenKey);
     });
   });
+
+  //////
+
+  function createMockData(): void {
+    importedModule.set('songs', testData);
+    service = new StorageService(importedModule);
+  }
 });
