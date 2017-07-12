@@ -13,6 +13,7 @@ import { SongDetailComponent } from './song-detail/song-detail.component';
 import { MissingSongComponent } from './missing-song/missing-song.component';
 import { YoutubePlayerComponent } from './youtube-player/youtube-player.component';
 import { SegmentsComponent } from './segments/segments.component';
+import { SegmentComponent } from './segment/segment.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SegmentsComponent } from './segments/segments.component';
     SongDetailComponent,
     MissingSongComponent,
     YoutubePlayerComponent,
-    SegmentsComponent
+    SegmentsComponent,
+    SegmentComponent
   ],
   imports: [
     BrowserModule,
