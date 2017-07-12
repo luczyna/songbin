@@ -84,4 +84,8 @@ export class SongDetailComponent implements OnInit {
       this.cancelSongEdits();
     }
   }
+
+  public updateSong(): void {
+    this.storage.saveSongs();
+  }
 }

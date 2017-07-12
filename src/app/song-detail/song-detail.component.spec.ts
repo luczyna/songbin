@@ -24,7 +24,7 @@ describe('SongDetailComponent', () => {
     id: string
   };
 
-  let sampleSong = {name: 'test', url: 'test.url', id: 'ABCDE'};
+  let sampleSong = {name: 'test', url: 'test.url', id: 'ABCDE', segments: []};
 
   beforeEach(() => {
     importedModule.set('songs', [sampleSong]);

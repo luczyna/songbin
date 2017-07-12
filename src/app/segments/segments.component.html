@@ -19,8 +19,8 @@
   <button type="submit" [disabled]="segmentForm.status !== 'VALID'">save segment</button>
 </form>
 
-<pre>
-name: {{segmentForm.get('name').valid}}
-start: {{segmentForm.get('start').valid}}
-end: {{segmentForm.get('end').valid}}
-</pre>
+<p *ngIf="!song.segments.length">no segments are added yet.</p>
+
+<ul>
+  <li *ngFor="let segment of song.segments; let i = index;">{{segment.name}}</li>
+</ul>

@@ -1,11 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 
+import { LocalStorageService } from 'ngx-store';
+
+import { Song } from '../models/song';
 import { SegmentsComponent } from './segments.component';
+import { StorageService } from '../storage/storage.service';
 
 describe('SegmentsComponent', () => {
   let component: SegmentsComponent;
   let fixture: ComponentFixture<SegmentsComponent>;
+  let testSong: Song;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -18,6 +23,10 @@ describe('SegmentsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SegmentsComponent);
     component = fixture.componentInstance;
+
+    testSong = new Song('fancy test', 'test.url', 'ABCDE');
+    component.song = testSong;
+
     fixture.detectChanges();
   });
 
@@ -114,6 +123,82 @@ describe('SegmentsComponent', () => {
 
     it('should have `end`', () => {
       expect(component.segmentForm.get('end')).not.toBeNull();
+    });
+  });
+
+  describe('#saveSegment', () => {
+    let storage;
+    let localStorage;
+
+    beforeEach(() => {
+      localStorage = new LocalStorageService();
+      localStorage.set('songs', [testSong]);
+
+      storage = new StorageService(localStorage);
+
+      component.buildForm();
+      component.segmentForm.get('name').setValue('test');
+      component.segmentForm.get('start').setValue(1);
+      component.segmentForm.get('end').setValue(2);
+      fixture.detectChanges();
+    });
+
+    it('should be available', () => {
+      expect(component.saveSegment).toBeDefined();
+    });
+
+    it('should save a segment to the current song', async((done: DoneFn) => {
+      let song = storage.getSongs();
+      let segmentCount = song[0].segments.length;
+      let updatedSegmentCount;
+
+      component.saveSegment();
+      component.onUpdate.subscribe(event => {
+        updatedSegmentCount = localStorage.get('songs')[0].segments.length;
+
+        expect(updatedSegmentCount).toBe(segmentCount + 1);
+        done();
+      });
+    }));
+
+    it('should take the segment details from the form', async((done: DoneFn) => {
+      component.saveSegment();
+      component.onUpdate.subscribe(event => {
+        let updatedSegment = storage.getSongs()[0];
+
+        expect(updatedSegment.name).toBe('test');
+        expect(updatedSegment.start).toBe(1);
+        expect(updatedSegment.end).toBe(2);
+        done();
+      });
+    }));
+
+    it('should default the segment loop attribute to false', async((done: DoneFn) => {
+      component.saveSegment();
+      component.onUpdate.subscribe(event => {
+        let updatedSegment = storage.getSongs()[0];
+
+        expect(updatedSegment.loop).toBe(false);
+        done();
+      });
+    }));
+
+    it('should default the segment playing attribute to false', async((done: DoneFn) => {
+      component.saveSegment();
+      component.onUpdate.subscribe(event => {
+        let updatedSegment = storage.getSongs()[0];
+
+        expect(updatedSegment.playing).toBe(false);
+        done();
+      });
+    }));
+
+    it('should hide the form', () => {
+      component.showForm = true;
+      component.buildForm();
+      component.saveSegment();
+
+      expect(component.showForm).toBe(false);
     });
   });
 

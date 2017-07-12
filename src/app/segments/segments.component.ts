@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,
+         Input, Output,
+         EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup,
          AbstractControl,
          Validators, ValidatorFn } from '@angular/forms';
 
+import { Song } from '../models/song';
 import { Segment } from '../models/segment';
 
 @Component({
@@ -11,6 +14,8 @@ import { Segment } from '../models/segment';
   styleUrls: ['./segments.component.scss']
 })
 export class SegmentsComponent implements OnInit {
+  @Input() song: Song;
+  @Output() onUpdate = new EventEmitter();
   segmentForm: FormGroup;
   showForm: boolean = false;
 
@@ -59,13 +64,16 @@ export class SegmentsComponent implements OnInit {
   }
 
   saveSegment(): void {
-    let newSegment: Segment = {
-      name: this.segmentForm.get('name').value,
-      start: this.segmentForm.get('start').value,
-      end: this.segmentForm.get('end').value,
-      loop: false,
-      playing: false
-    };
+    let name = this.segmentForm.get('name').value;
+    let start = this.segmentForm.get('start').value;
+    let end = this.segmentForm.get('end').value;
+
+    let newSegment: Segment = new Segment(name, start, end);
+
+    this.song.segments.push(newSegment);
+    this.onUpdate.emit();
+
+    this.showForm = false;
   }
 
   toggleSegmentForm(): void {

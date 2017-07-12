@@ -23,5 +23,5 @@
   </form>
 
   <yt-player [ytid]="song.url"></yt-player>
-  <app-segments></app-segments>
+  <app-segments [(song)]="song" (onUpdate)="updateSong()"></app-segments>
 </div>
