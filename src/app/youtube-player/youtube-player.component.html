@@ -1,0 +1,9 @@
+<youtube-player
+  [videoId]="id"
+  (ready)="savePlayer($event)"
+  (change)="onStateChange($event)"></youtube-player>
+
+<div>
+  <p>duration: <strong>{{duration}}</strong></p>
+  <p *ngFor="let segment of segments; let i = index" (click)="playSegment(i)">{{segment[0]}} - {{segment[1]}}(seconds)</p>
+</div>
