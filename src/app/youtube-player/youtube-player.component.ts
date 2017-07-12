@@ -10,6 +10,7 @@ export class YoutubePlayerComponent implements OnInit {
 
   private id: string;
   player: YT.Player;
+
   duration: number;
   segments = [];
   watchForPlaying: boolean = false;
@@ -20,13 +21,37 @@ export class YoutubePlayerComponent implements OnInit {
     this.id = this.trimIdFromYTURL();
   }
 
-  onStateChange(event){
+  ////// YT Player method abstractions
+  ////// for the sake of testing
+  public yt = {
+    getDuration: (): number => {
+      return this.player.getDuration();
+    },
+    getPlayerState: (): string => {
+      return YT.PlayerState[this.player.getPlayerState()];
+    },
+    pauseVideo: (): void => {
+      this.player.pauseVideo();
+    },
+    playVideo: (): void => {
+      this.player.playVideo();
+    },
+    seekTo: (when: number, allowSeek?: boolean): void => {
+      this.player.seekTo(when, allowSeek)
+    },
+    stopVideo: (): void => {
+      this.player.stopVideo();
+    }
+  };
+
+  ////// component logic
+  public onStateChange(event){
     console.log('player state', event.data);
 
     // PLAYING
     if (this.watchForPlaying && event.data === 1) {
       console.log('we will be stopping this in 10 secinds');
-      window.setTimeout(() => this.stopVideo(), 1000 * 10);
+      window.setTimeout(() => this.yt.stopVideo(), 1000 * 10);
     }
 
     // PAUSED
@@ -35,27 +60,17 @@ export class YoutubePlayerComponent implements OnInit {
     }
   }
 
-	savePlayer(player) {
-    this.player = player;
-    console.log('player instance', player)
-
-    this.duration = this.player.getDuration();
-    this.prepareSegments();
-	}
-
   public playSegment(segmentIndex: number) {
     let segmentStart = this.segments[segmentIndex][0];
-    console.log('playing the segment at ', segmentStart);
 
-    if (this.player.getPlayerState() === 1) {
-      console.log('pausing currently playing video');
-      this.player.pauseVideo();
+    if (this.yt.getPlayerState() === 'PLAYING') {
+      this.yt.pauseVideo();
     }
 
-    this.player.seekTo(segmentStart, false);
+    this.yt.seekTo(segmentStart, false);
 
     this.watchForPlaying = true;
-    this.player.playVideo();
+    this.yt.playVideo();
   }
 
   public prepareSegments(): void {
@@ -78,8 +93,18 @@ export class YoutubePlayerComponent implements OnInit {
     }
   }
 
+  public savePlayer(player) {
+    this.player = player;
+    this.setUpVideoInformation();
+  }
+
+  public setUpVideoInformation() {
+    this.duration = this.yt.getDuration();
+    this.prepareSegments();
+  }
+
   public stopVideo() {
-    this.player.stopVideo();
+    this.yt.stopVideo();
     this.watchForPlaying = false;
   }
 
