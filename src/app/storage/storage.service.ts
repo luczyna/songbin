@@ -52,11 +52,7 @@ export class StorageService {
 
     if (storedSongs !== null) {
       storedSongs.forEach((song) => {
-        let datum: Song = {
-          name: song.name,
-          url: song.url,
-          id: song.id
-        };
+        let datum: Song = new Song(song.name, song.url, song.id, song.segments);
 
         songs.push(datum);
       });
