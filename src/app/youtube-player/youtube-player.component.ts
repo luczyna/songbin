@@ -73,25 +73,25 @@ export class YoutubePlayerComponent implements OnInit {
     this.yt.playVideo();
   }
 
-  public prepareSegments(): void {
-    let start = 0;
-    let count = Math.floor(this.duration / 10);
-    let remainder;
-
-    for (var i = 0; i < count; i++) {
-      let seg = [];
-      start = i;
-      seg[0] = (i === 0) ? (start) : (start * 10) + 1
-      seg[1] = (start + 1) * 10;
-
-      this.segments.push(seg);
-    }
-
-    remainder = this.duration % 10;
-    if (remainder) {
-      this.segments.push([this.duration - remainder, this.duration]);
-    }
-  }
+  // public prepareSegments(): void {
+  //   let start = 0;
+  //   let count = Math.floor(this.duration / 10);
+  //   let remainder;
+  //
+  //   for (var i = 0; i < count; i++) {
+  //     let seg = [];
+  //     start = i;
+  //     seg[0] = (i === 0) ? (start) : (start * 10) + 1
+  //     seg[1] = (start + 1) * 10;
+  //
+  //     this.segments.push(seg);
+  //   }
+  //
+  //   remainder = this.duration % 10;
+  //   if (remainder) {
+  //     this.segments.push([this.duration - remainder, this.duration]);
+  //   }
+  // }
 
   public savePlayer(player) {
     this.player = player;
@@ -100,7 +100,7 @@ export class YoutubePlayerComponent implements OnInit {
 
   public setUpVideoInformation() {
     this.duration = this.yt.getDuration();
-    this.prepareSegments();
+    // this.prepareSegments();
   }
 
   public stopVideo() {
