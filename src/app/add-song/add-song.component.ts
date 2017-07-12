@@ -29,12 +29,12 @@ export class AddSongComponent implements OnInit {
   ngOnInit() {}
 
   addingSong() {
-    const newSong: Song = {
-      name: this.songForm.get('name').value,
-      url: this.songForm.get('url').value,
-      // id: this.songForm.get('name').value.replace(' ', '-')
-      id: String(Math.floor(Math.random() * 10000))
-    };
+    let name: string = this.songForm.get('name').value;
+    let url: string = this.songForm.get('url').value;
+    // let id: string = this.songForm.get('name').value.replace(' ', '-');
+    let id: string = String(Math.floor(Math.random() * 10000));
+
+    const newSong: Song = new Song(name, url, id);
 
     this.collection.push(newSong);
     this.storage.saveSongs();

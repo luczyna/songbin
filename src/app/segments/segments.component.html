@@ -1,0 +1,26 @@
+<p><button type="button" (click)="toggleSegmentForm()">Add a segment</button></p>
+
+<form [hidden]="!showForm" [formGroup]="segmentForm" (ngSubmit)="saveSegment()">
+  <label>
+    name
+    <input type="text" formControlName="name">
+  </label>
+
+  <label>
+    start
+    <input type="number" formControlName="start">
+  </label>
+
+  <label>
+    end
+    <input type="number" formControlName="end">
+  </label>
+
+  <button type="submit" [disabled]="segmentForm.status !== 'VALID'">save segment</button>
+</form>
+
+<p *ngIf="!song.segments.length">no segments are added yet.</p>
+
+<ul>
+  <li *ngFor="let segment of song.segments; let i = index;">{{segment.name}}</li>
+</ul>

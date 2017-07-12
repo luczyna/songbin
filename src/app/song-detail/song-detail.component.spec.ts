@@ -8,6 +8,7 @@ import { YoutubePlayerModule } from 'ng2-youtube-player';
 
 import { SongDetailComponent } from './song-detail.component';
 import { MissingSongComponent } from '../missing-song/missing-song.component';
+import { SegmentsComponent } from '../segments/segments.component';
 import { StorageService } from '../storage/storage.service';
 import { ConstantService } from '../constant/constant.service';
 import { YoutubePlayerComponent } from '../youtube-player/youtube-player.component';
@@ -23,7 +24,7 @@ describe('SongDetailComponent', () => {
     id: string
   };
 
-  let sampleSong = {name: 'test', url: 'test.url', id: 'ABCDE'};
+  let sampleSong = {name: 'test', url: 'test.url', id: 'ABCDE', segments: []};
 
   beforeEach(() => {
     importedModule.set('songs', [sampleSong]);
@@ -300,8 +301,9 @@ describe('SongDetailComponent', () => {
         )
       ],
       declarations: [
-        SongDetailComponent,
         MissingSongComponent,
+        SongDetailComponent,
+        SegmentsComponent,
         YoutubePlayerComponent
       ],
       providers: [

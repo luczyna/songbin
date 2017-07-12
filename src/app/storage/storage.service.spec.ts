@@ -5,7 +5,7 @@ import { Song } from '../models/song';
 describe('StorageService', () => {
   let service: StorageService;
   let importedModule: LocalStorageService;
-  let testData = [ {name: 'test', url: 'fake.url', id: 'ABCDE'} ];
+  let testData = [ {name: 'test', url: 'fake.url', id: 'ABCDE', segments: []} ];
 
   beforeEach(() => {
     importedModule = new LocalStorageService();
@@ -53,6 +53,7 @@ describe('StorageService', () => {
           expect(result.id).toBe(testData[0].id);
           expect(result.name).toBe(testData[0].name);
           expect(result.url).toBe(testData[0].url);
+          expect(result.segments.length).toBe(testData[0].segments.length);
           done();
         });
       });
@@ -89,6 +90,7 @@ describe('StorageService', () => {
       expect(result.length).toBe(testData.length);
       expect(result[0].name).toBe(testData[0].name);
       expect(result[0].url).toBe(testData[0].url);
+      expect(result[0].segments.length).toBe(testData[0].segments.length);
     });
   });
 
