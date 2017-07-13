@@ -1,3 +1,10 @@
-<p>
-  segment works!
-</p>
+<div>
+  <button type="button" (click)="playSegment()">
+    <span>{{(segment.playing) ? 'Pause' : 'Play'}}</span>
+  </button>
+  <button type="button" (click)="toggleLooping()">Toggle loop</button>
+  <span>{{(segment.loop) ? 'looping' : 'not looping'}}</span>
+  <input type="text" [value]="segment.name">
+  <button type="button" (click)="editSegment()">Edit</button>
+  <button type="button" (click)="deleteSegment()">Delete</button>
+</div>

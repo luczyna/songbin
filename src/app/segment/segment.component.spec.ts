@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Segment } from '../models/segment';
 import { SegmentComponent } from './segment.component';
 
 describe('SegmentComponent', () => {
@@ -16,6 +17,7 @@ describe('SegmentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SegmentComponent);
     component = fixture.componentInstance;
+    component.segment = new Segment('test segment', 1, 2);
     fixture.detectChanges();
   });
 
