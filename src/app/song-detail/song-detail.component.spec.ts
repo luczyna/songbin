@@ -9,6 +9,7 @@ import { YoutubePlayerModule } from 'ng2-youtube-player';
 import { SongDetailComponent } from './song-detail.component';
 import { MissingSongComponent } from '../missing-song/missing-song.component';
 import { SegmentsComponent } from '../segments/segments.component';
+import { SegmentComponent } from '../segment/segment.component';
 import { StorageService } from '../storage/storage.service';
 import { ConstantService } from '../constant/constant.service';
 import { YoutubePlayerComponent } from '../youtube-player/youtube-player.component';
@@ -303,6 +304,7 @@ describe('SongDetailComponent', () => {
       declarations: [
         MissingSongComponent,
         SongDetailComponent,
+        SegmentComponent,
         SegmentsComponent,
         YoutubePlayerComponent
       ],

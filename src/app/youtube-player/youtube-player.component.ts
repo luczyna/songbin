@@ -7,18 +7,31 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class YoutubePlayerComponent implements OnInit {
   @Input() ytid: string;
+  @Input() songSegment;
 
   private id: string;
   player: YT.Player;
 
   duration: number;
-  segments = [];
+  timeout;
   watchForPlaying: boolean = false;
 
   constructor() { }
 
   ngOnInit() {
     this.id = this.trimIdFromYTURL();
+  }
+
+  ngOnChanges() {
+    // TODO disable the inputs on the segment until the youtube player is loaded
+    console.log('this is on checking');
+
+    if (this.songSegment) {
+      if (this.songSegment.playing) {
+        console.log('this is playing a song');
+        this.playSegment();
+      }
+    }
   }
 
   ////// YT Player method abstractions
@@ -38,9 +51,6 @@ export class YoutubePlayerComponent implements OnInit {
     },
     seekTo: (when: number, allowSeek?: boolean): void => {
       this.player.seekTo(when, allowSeek)
-    },
-    stopVideo: (): void => {
-      this.player.stopVideo();
     }
   };
 
@@ -50,8 +60,9 @@ export class YoutubePlayerComponent implements OnInit {
 
     // PLAYING
     if (this.watchForPlaying && event.data === 1) {
-      console.log('we will be stopping this in 10 secinds');
-      window.setTimeout(() => this.yt.stopVideo(), 1000 * 10);
+      let duration = this.songSegment.end - this.songSegment.start;
+      console.log('we will be stopping this in %s seconds', duration);
+      this.timeout = window.setTimeout(() => this.yt.pauseVideo(), 1000 * duration);
     }
 
     // PAUSED
@@ -60,14 +71,12 @@ export class YoutubePlayerComponent implements OnInit {
     }
   }
 
-  public playSegment(segmentIndex: number) {
-    let segmentStart = this.segments[segmentIndex][0];
-
+  public playSegment() {
     if (this.yt.getPlayerState() === 'PLAYING') {
       this.yt.pauseVideo();
     }
 
-    this.yt.seekTo(segmentStart, false);
+    this.yt.seekTo(this.songSegment.start, false);
 
     this.watchForPlaying = true;
     this.yt.playVideo();
@@ -104,7 +113,7 @@ export class YoutubePlayerComponent implements OnInit {
   }
 
   public stopVideo() {
-    this.yt.stopVideo();
+    this.yt.pauseVideo();
     this.watchForPlaying = false;
   }
 

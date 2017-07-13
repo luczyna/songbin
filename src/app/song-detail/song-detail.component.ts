@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms'
 import 'rxjs/add/operator/switchMap';
 
 import { Song } from '../models/song';
+import { Segment } from '../models/segment';
 import { StorageService } from '../storage/storage.service';
 import { ConstantService } from '../constant/constant.service';
 
@@ -15,6 +16,8 @@ import { ConstantService } from '../constant/constant.service';
 })
 export class SongDetailComponent implements OnInit {
   song: Song;
+  segmentToPlay: Segment;
+
   editing: boolean = false;
   songForm: FormGroup;
   urlValidator: ValidatorFn;
@@ -82,6 +85,14 @@ export class SongDetailComponent implements OnInit {
       this.editSong();
     } else {
       this.cancelSongEdits();
+    }
+  }
+
+  public toggleSegmentPlay(segmentToToggle) {
+    if (segmentToToggle.playing === false) {
+      this.segmentToPlay = null;
+    } else {
+      this.segmentToPlay = segmentToToggle;
     }
   }
 

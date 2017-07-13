@@ -16,6 +16,7 @@ import { Segment } from '../models/segment';
 export class SegmentsComponent implements OnInit {
   @Input() song: Song;
   @Output() onUpdate = new EventEmitter();
+  @Output() onSegmentPlayToggle = new EventEmitter();
   segmentForm: FormGroup;
   showForm: boolean = false;
 
@@ -74,6 +75,10 @@ export class SegmentsComponent implements OnInit {
     this.onUpdate.emit();
 
     this.showForm = false;
+  }
+
+  togglePlayingSegment(segmentToToggle): void {
+    this.onSegmentPlayToggle.emit(segmentToToggle);
   }
 
   toggleSegmentForm(): void {

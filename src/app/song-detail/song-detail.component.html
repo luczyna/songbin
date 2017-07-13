@@ -22,6 +22,6 @@
     </p>
   </form>
 
-  <yt-player [ytid]="song.url"></yt-player>
-  <app-segments [(song)]="song" (onUpdate)="updateSong()"></app-segments>
+  <yt-player [ytid]="song.url" [songSegment]="segmentToPlay"></yt-player>
+  <app-segments [(song)]="song" (onUpdate)="updateSong()" (onSegmentPlayToggle)="toggleSegmentPlay($event)"></app-segments>
 </div>
