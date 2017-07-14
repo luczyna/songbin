@@ -14,6 +14,7 @@ export class YoutubePlayerComponent implements OnInit {
 
   duration: number;
   timeout: number;
+  // we set this to true to ensure we're watching user initiated events
   watchForPlaying: boolean = false;
 
   constructor() { }
@@ -23,28 +24,33 @@ export class YoutubePlayerComponent implements OnInit {
   }
 
   ngOnChanges() {
-    // TODO disable the inputs on the segment until the youtube player is loaded
-    // TODO don't allow other segments to start playing until the playing segment is stopped
     // TODO update the segment when playback is done and it's not looping
-    console.log('this is on checking');
 
     if (this.songSegment) {
       if (this.songSegment.playing) {
         console.log('this is playing a song');
         this.playSegment();
       }
+
+      if (this.songSegment.loop) {
+        this.setUpSegmentEnd(true);
+      } else if (!this.songSegment.loop && this.timeout) {
+        window.clearTimeout(this.timeout);
+        this.timeout = null;
+      }
     } else if (this.songSegment === null) {
       // we don't have a segment to play
-      console.log('this is pausing a song');
       this.watchForPlaying = false;
-      this.yt.pauseVideo();
-      window.clearTimeout(this.timeout);
+      this.stopVideo();
     }
   }
 
   ////// YT Player method abstractions
   ////// for the sake of testing
   public yt = {
+    getCurrentTime: (): number => {
+      return this.player.getCurrentTime();
+    },
     getDuration: (): number => {
       return this.player.getDuration();
     },
@@ -76,21 +82,27 @@ export class YoutubePlayerComponent implements OnInit {
   public onStateChange(event) {
     this.describeEvent(event);
 
-    // PLAYING
-    if (this.watchForPlaying && event.data === YT.PlayerState.PLAYING) {
-      let duration = this.songSegment.end - this.songSegment.start;
-      console.log('we will be stopping this in %s seconds', duration);
-      this.timeout = window.setTimeout(() => this.yt.pauseVideo(), 1000 * duration);
+    // user clicked one of the video controls...
+    // TODO how do we watch this for the SegmentComponent??
+    if (!this.watchForPlaying && this.timeout) {
+      console.log('***** this was a non-watchForPlaying event *****');
+      window.clearTimeout(this.timeout);
+      this.timeout = null;
     }
 
-    // PAUSED
-    // TODO we're just trying to get the looping to happen
-    // using the watchForPlaying, we need this to be different
-    if (this.watchForPlaying && event.data === YT.PlayerState.PAUSED) {
-      console.log('we should be restarting this');
-      // window.setTimeout(() => this.stopVideo);
-      this.yt.seekTo(this.songSegment.start, true);
-      this.yt.playVideo();
+    // if (!this.watchForPlaying) return;
+
+    if (event.data === YT.PlayerState.PLAYING) {
+      this.setUpSegmentEnd();
+    }
+
+    if (event.data === YT.PlayerState.PAUSED) {
+      // TODO we need to communicate to SegmentComponent that it's not playing
+      if (this.songSegment && this.songSegment.loop) {
+        this.playSegment();
+      } else {
+        this.watchForPlaying = false;
+      }
     }
   }
 
@@ -113,9 +125,28 @@ export class YoutubePlayerComponent implements OnInit {
     this.duration = this.yt.getDuration();
   }
 
+  public setUpSegmentEnd(setFromNow:boolean = false) {
+    let beginning: number;
+    let duration: number;
+
+    if (setFromNow) {
+      beginning = this.yt.getCurrentTime();
+    } else {
+      beginning = this.songSegment.start;
+    }
+
+    duration = this.songSegment.end - beginning;
+    console.log('we will be stopping this in %s seconds', duration);
+
+    duration *= 1000;
+
+    this.timeout = window.setTimeout(() => this.stopVideo(), duration);
+  }
+
   public stopVideo() {
     this.yt.pauseVideo();
-    this.watchForPlaying = false;
+    if (this.timeout) window.clearTimeout(this.timeout);
+    this.timeout = null;
   }
 
   public trimIdFromYTURL(): string {
