@@ -22,5 +22,8 @@
 <p *ngIf="!song.segments.length">no segments are added yet.</p>
 
 <div>
-  <app-segment *ngFor="let segment of song.segments" [segment]="segment" (onPlayToggle)="togglePlayingSegment($event)"></app-segment>
+  <app-segment *ngFor="let segment of song.segments"
+               [segment]="segment"
+               [disablePlayback]="disableSegments && segment != activeSegment"
+               (onPlayToggle)="togglePlayingSegment($event)"></app-segment>
 </div>

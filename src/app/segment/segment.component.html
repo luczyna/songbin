@@ -1,10 +1,10 @@
 <div>
-  <button type="button" (click)="playSegment()">
+  <button type="button" (click)="playSegment()" [disabled]="disablePlayback">
     <span>{{(segment.playing) ? 'Pause' : 'Play'}}</span>
   </button>
-  <button type="button" (click)="toggleLooping()">Toggle loop</button>
+  <button type="button" (click)="toggleLooping()" [disabled]="disablePlayback">Toggle loop</button>
   <span>{{(segment.loop) ? 'looping' : 'not looping'}}</span>
   <input type="text" [value]="segment.name">
-  <button type="button" (click)="editSegment()">Edit</button>
-  <button type="button" (click)="deleteSegment()">Delete</button>
+  <button type="button" (click)="editSegment()" [disabled]="disablePlayback">Edit</button>
+  <button type="button" (click)="deleteSegment()" [disabled]="disablePlayback">Delete</button>
 </div>

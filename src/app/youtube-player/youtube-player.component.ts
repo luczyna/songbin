@@ -13,7 +13,7 @@ export class YoutubePlayerComponent implements OnInit {
   player: YT.Player;
 
   duration: number;
-  timeout;
+  timeout: number;
   watchForPlaying: boolean = false;
 
   constructor() { }
@@ -24,6 +24,7 @@ export class YoutubePlayerComponent implements OnInit {
 
   ngOnChanges() {
     // TODO disable the inputs on the segment until the youtube player is loaded
+    // TODO don't allow other segments to start playing until the playing segment is stopped
     // TODO update the segment when playback is done and it's not looping
     console.log('this is on checking');
 
@@ -31,9 +32,13 @@ export class YoutubePlayerComponent implements OnInit {
       if (this.songSegment.playing) {
         console.log('this is playing a song');
         this.playSegment();
-      } else {
-        this.yt.pauseVideo();
       }
+    } else if (this.songSegment === null) {
+      // we don't have a segment to play
+      console.log('this is pausing a song');
+      this.watchForPlaying = false;
+      this.yt.pauseVideo();
+      window.clearTimeout(this.timeout);
     }
   }
 
@@ -58,14 +63,24 @@ export class YoutubePlayerComponent implements OnInit {
   };
 
   ////// component logic
-  public onStateChange(event){
-    console.log('player state', event.data);
+  private describeEvent(event): void {
+    let state: string;
+
+    Object.keys(YT.PlayerState).forEach((key) => {
+      if (YT.PlayerState[key] === event.data) state = key;
+    });
+
+    console.log('player state', event.data, state);
+  }
+
+  public onStateChange(event) {
+    this.describeEvent(event);
 
     // PLAYING
     if (this.watchForPlaying && event.data === YT.PlayerState.PLAYING) {
       let duration = this.songSegment.end - this.songSegment.start;
       console.log('we will be stopping this in %s seconds', duration);
-      this.timeout = window.setTimeout(() => this.player.pauseVideo(), 1000 * duration);
+      this.timeout = window.setTimeout(() => this.yt.pauseVideo(), 1000 * duration);
     }
 
     // PAUSED
@@ -74,8 +89,8 @@ export class YoutubePlayerComponent implements OnInit {
     if (this.watchForPlaying && event.data === YT.PlayerState.PAUSED) {
       console.log('we should be restarting this');
       // window.setTimeout(() => this.stopVideo);
-      this.player.seekTo(this.songSegment.start, true);
-      this.player.playVideo();
+      this.yt.seekTo(this.songSegment.start, true);
+      this.yt.playVideo();
     }
   }
 
@@ -84,19 +99,9 @@ export class YoutubePlayerComponent implements OnInit {
       this.yt.pauseVideo();
     }
 
-    // this.yt.seekTo(this.songSegment.start, true).then(() => {
-    //   this.watchForPlaying = true;
-    //   this.yt.playVideo();
-    // });
-
-    // this.player.seekTo(this.songSegment.start, true).then(() => {
-    //   this.watchForPlaying = true;
-    //   this.player.playVideo();
-    // });
-
-    this.player.seekTo(this.songSegment.start, true);
+    this.yt.seekTo(this.songSegment.start, true);
     this.watchForPlaying = true;
-    this.player.playVideo();
+    this.yt.playVideo();
   }
 
   public savePlayer(player) {

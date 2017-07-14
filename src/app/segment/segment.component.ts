@@ -9,7 +9,7 @@ import { Segment } from '../models/segment';
 })
 export class SegmentComponent implements OnInit {
   @Input() segment: Segment;
-  // @Output() onPlayToggle = new EventEmitter(<Segment>);
+  @Input() disablePlayback: boolean;
   @Output() onPlayToggle = new EventEmitter();
   constructor() { }
 
