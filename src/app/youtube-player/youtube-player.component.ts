@@ -24,12 +24,15 @@ export class YoutubePlayerComponent implements OnInit {
 
   ngOnChanges() {
     // TODO disable the inputs on the segment until the youtube player is loaded
+    // TODO update the segment when playback is done and it's not looping
     console.log('this is on checking');
 
     if (this.songSegment) {
       if (this.songSegment.playing) {
         console.log('this is playing a song');
         this.playSegment();
+      } else {
+        this.yt.pauseVideo();
       }
     }
   }
@@ -59,15 +62,20 @@ export class YoutubePlayerComponent implements OnInit {
     console.log('player state', event.data);
 
     // PLAYING
-    if (this.watchForPlaying && event.data === 1) {
+    if (this.watchForPlaying && event.data === YT.PlayerState.PLAYING) {
       let duration = this.songSegment.end - this.songSegment.start;
       console.log('we will be stopping this in %s seconds', duration);
-      this.timeout = window.setTimeout(() => this.yt.pauseVideo(), 1000 * duration);
+      this.timeout = window.setTimeout(() => this.player.pauseVideo(), 1000 * duration);
     }
 
     // PAUSED
-    if (this.watchForPlaying && event.data === 2) {
+    // TODO we're just trying to get the looping to happen
+    // using the watchForPlaying, we need this to be different
+    if (this.watchForPlaying && event.data === YT.PlayerState.PAUSED) {
+      console.log('we should be restarting this');
       // window.setTimeout(() => this.stopVideo);
+      this.player.seekTo(this.songSegment.start, true);
+      this.player.playVideo();
     }
   }
 
@@ -76,31 +84,20 @@ export class YoutubePlayerComponent implements OnInit {
       this.yt.pauseVideo();
     }
 
-    this.yt.seekTo(this.songSegment.start, false);
+    // this.yt.seekTo(this.songSegment.start, true).then(() => {
+    //   this.watchForPlaying = true;
+    //   this.yt.playVideo();
+    // });
 
+    // this.player.seekTo(this.songSegment.start, true).then(() => {
+    //   this.watchForPlaying = true;
+    //   this.player.playVideo();
+    // });
+
+    this.player.seekTo(this.songSegment.start, true);
     this.watchForPlaying = true;
-    this.yt.playVideo();
+    this.player.playVideo();
   }
-
-  // public prepareSegments(): void {
-  //   let start = 0;
-  //   let count = Math.floor(this.duration / 10);
-  //   let remainder;
-  //
-  //   for (var i = 0; i < count; i++) {
-  //     let seg = [];
-  //     start = i;
-  //     seg[0] = (i === 0) ? (start) : (start * 10) + 1
-  //     seg[1] = (start + 1) * 10;
-  //
-  //     this.segments.push(seg);
-  //   }
-  //
-  //   remainder = this.duration % 10;
-  //   if (remainder) {
-  //     this.segments.push([this.duration - remainder, this.duration]);
-  //   }
-  // }
 
   public savePlayer(player) {
     this.player = player;
@@ -109,7 +106,6 @@ export class YoutubePlayerComponent implements OnInit {
 
   public setUpVideoInformation() {
     this.duration = this.yt.getDuration();
-    // this.prepareSegments();
   }
 
   public stopVideo() {
