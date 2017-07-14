@@ -23,7 +23,5 @@
 
 <div>
   <app-segment *ngFor="let segment of song.segments"
-               [segment]="segment"
-               [disablePlayback]="disableSegments && segment != activeSegment"
-               (onPlayToggle)="togglePlayingSegment($event)"></app-segment>
+               [segment]="segment"></app-segment>
 </div>

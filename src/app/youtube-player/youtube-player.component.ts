@@ -1,5 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { Subscription } from 'rxjs/Subscription';
+
+import { Segment } from '../models/segment';
+import { PlayerService } from '../player/player.service';
+
 @Component({
   selector: 'yt-player',
   templateUrl: './youtube-player.component.html',
@@ -7,83 +12,97 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class YoutubePlayerComponent implements OnInit {
   @Input() ytid: string;
-  @Input() songSegment;
-
   private id: string;
-  player: YT.Player;
 
   duration: number;
+  ytPlayer: YT.Player;
+  segment: Segment = null;
+  isLooping: boolean = null;
   timeout: number;
   // we set this to true to ensure we're watching user initiated events
   watchForPlaying: boolean = false;
 
-  constructor() { }
+  segmentSub: Subscription;
+  loopingSub: Subscription;
+
+  constructor(private player: PlayerService) {
+    this.segmentSub = this.player.activeSegment.subscribe((segment) => {
+      this.segment = segment;
+
+      if (segment !== null) {
+        this.isLooping = segment.loop;
+        if (segment.playing) this.playSegment();
+      } else {
+        this.isLooping = null;
+        this.stopVideo();
+      }
+    });
+
+    this.loopingSub = this.player.isSegmentLooping.subscribe((isLooping) => {
+      this.isLooping = isLooping;
+    })
+  }
 
   ngOnInit() {
     this.id = this.trimIdFromYTURL();
   }
 
-  ngOnChanges() {
-    // TODO update the segment when playback is done and it's not looping
-
-    if (this.songSegment) {
-      if (this.songSegment.playing) {
-        console.log('this is playing a song');
-        this.playSegment();
-      }
-
-      if (this.songSegment.loop) {
-        this.setUpSegmentEnd(true);
-      } else if (!this.songSegment.loop && this.timeout) {
-        window.clearTimeout(this.timeout);
-        this.timeout = null;
-      }
-    } else if (this.songSegment === null) {
-      // we don't have a segment to play
-      this.watchForPlaying = false;
-      this.stopVideo();
-    }
+  ngOnDestroy() {
+    this.segmentSub.unsubscribe();
+    this.loopingSub.unsubscribe();
   }
+
+  // ngOnChanges() {
+  //   // TODO update the segment when playback is done and it's not looping
+  //
+  //   if (this.segment) {
+  //     if (this.segment.playing) {
+  //       console.log('this is playing a song');
+  //       this.playSegment();
+  //     }
+  //
+  //     if (this.segment.loop) {
+  //       this.setUpSegmentEnd(true);
+  //     } else if (!this.segment.loop && this.timeout) {
+  //       window.clearTimeout(this.timeout);
+  //       this.timeout = null;
+  //     }
+  //   } else if (this.segment === null) {
+  //     // we don't have a segment to play
+  //     this.watchForPlaying = false;
+  //     this.stopVideo();
+  //   }
+  // }
 
   ////// YT Player method abstractions
   ////// for the sake of testing
   public yt = {
     getCurrentTime: (): number => {
-      return this.player.getCurrentTime();
+      return this.ytPlayer.getCurrentTime();
     },
     getDuration: (): number => {
-      return this.player.getDuration();
+      return this.ytPlayer.getDuration();
     },
     getPlayerState: (): string => {
-      return YT.PlayerState[this.player.getPlayerState()];
+      return YT.PlayerState[this.ytPlayer.getPlayerState()];
     },
     pauseVideo: (): void => {
-      this.player.pauseVideo();
+      this.ytPlayer.pauseVideo();
     },
     playVideo: (): void => {
-      this.player.playVideo();
+      this.ytPlayer.playVideo();
     },
     seekTo: (when: number, allowSeek?: boolean): void => {
-      this.player.seekTo(when, allowSeek)
+      this.ytPlayer.seekTo(when, allowSeek)
     }
   };
 
   ////// component logic
-  private describeEvent(event): void {
-    let state: string;
-
-    Object.keys(YT.PlayerState).forEach((key) => {
-      if (YT.PlayerState[key] === event.data) state = key;
-    });
-
-    console.log('player state', event.data, state);
-  }
-
   public onStateChange(event) {
-    this.describeEvent(event);
+    let eventDesc = this.describeEvent(event);
+    this.player.updatePlayerStatus(eventDesc);
 
-    // user clicked one of the video controls...
-    // TODO how do we watch this for the SegmentComponent??
+    // user clicked one of the video controls... ???
     if (!this.watchForPlaying && this.timeout) {
       console.log('***** this was a non-watchForPlaying event *****');
       window.clearTimeout(this.timeout);
@@ -97,8 +116,7 @@ export class YoutubePlayerComponent implements OnInit {
     }
 
     if (event.data === YT.PlayerState.PAUSED) {
-      // TODO we need to communicate to SegmentComponent that it's not playing
-      if (this.songSegment && this.songSegment.loop) {
+      if (this.segment && (this.isLooping || this.segment.loop)) {
         this.playSegment();
       } else {
         this.watchForPlaying = false;
@@ -111,13 +129,13 @@ export class YoutubePlayerComponent implements OnInit {
       this.yt.pauseVideo();
     }
 
-    this.yt.seekTo(this.songSegment.start, true);
+    this.yt.seekTo(this.segment.start, true);
     this.watchForPlaying = true;
     this.yt.playVideo();
   }
 
   public savePlayer(player) {
-    this.player = player;
+    this.ytPlayer = player;
     this.setUpVideoInformation();
   }
 
@@ -132,11 +150,11 @@ export class YoutubePlayerComponent implements OnInit {
     if (setFromNow) {
       beginning = this.yt.getCurrentTime();
     } else {
-      beginning = this.songSegment.start;
+      beginning = this.segment.start;
     }
 
-    duration = this.songSegment.end - beginning;
-    console.log('we will be stopping this in %s seconds', duration);
+    duration = this.segment.end - beginning;
+    // console.log('we will be stopping this in %s seconds', duration);
 
     duration *= 1000;
 
@@ -156,5 +174,16 @@ export class YoutubePlayerComponent implements OnInit {
     } else {
       return this.ytid;
     }
+  }
+
+  private describeEvent(event): string {
+    let state: string;
+
+    Object.keys(YT.PlayerState).forEach((key) => {
+      if (YT.PlayerState[key] === event.data) state = key;
+    });
+
+    // console.log('player state', event.data, state);
+    return state;
   }
 }
