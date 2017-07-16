@@ -21,10 +21,14 @@ export class SegmentComponent implements OnInit {
   activeSegmentIsLooping: boolean = null;
   disableInteractions: boolean = false;
 
-  constructor(private player: PlayerService) {
+  constructor(public player: PlayerService) {}
+
+  ngOnInit() {
     this.playerStatusSub = this.player.currentPlayerStatus.subscribe((status) => {
       if (status === 'PAUSED' && !this.activeSegmentIsLooping) {
+        // please refer to #toggleLooping
         if (this.isActiveSegment) this.segment.playing = false;
+
         this.disableInteractions = false;
       }
     });
@@ -36,12 +40,9 @@ export class SegmentComponent implements OnInit {
     });
 
     this.activeLoopingSub = this.player.isSegmentLooping.subscribe((isLooping) => {
-      console.log('segment: active segment is looping: %s', isLooping);
       this.activeSegmentIsLooping = isLooping;
     });
   }
-
-  ngOnInit() {}
 
   ngOnDestroy() {
     this.playerStatusSub.unsubscribe();
@@ -67,6 +68,12 @@ export class SegmentComponent implements OnInit {
   toggleLooping(): void {
     this.segment.loop = !this.segment.loop;
 
+    // while this MAY seem redundant (can a non-playing segment be active, truely)?
+    // this double check is in place due to a check happening above
+    // in this.playerStatusSub: Subscription
+    //   we are checking to see if a non-looping segment
+    //   that is "this" one is done playing (paused)
+    //   so we can update this component instance settings for the view
     if (this.segment.playing && this.isActiveSegment) {
       this.player.updateLooping(this.segment.loop);
     }
