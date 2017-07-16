@@ -16,11 +16,9 @@ import { Segment } from '../models/segment';
 export class SegmentsComponent implements OnInit {
   @Input() song: Song;
   @Output() onUpdate = new EventEmitter();
-  @Output() onSegmentPlayToggle = new EventEmitter();
+
   segmentForm: FormGroup;
   showForm: boolean = false;
-  activeSegment: Segment = null;
-  disableSegments: boolean = false;
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -77,17 +75,6 @@ export class SegmentsComponent implements OnInit {
     this.onUpdate.emit();
 
     this.showForm = false;
-  }
-
-  togglePlayingSegment(segmentToToggle): void {
-    if (segmentToToggle.playing) {
-      this.activeSegment = segmentToToggle;
-    } else {
-      this.activeSegment = null;
-    }
-
-    this.disableSegments = segmentToToggle.playing;
-    this.onSegmentPlayToggle.emit(segmentToToggle);
   }
 
   toggleSegmentForm(): void {

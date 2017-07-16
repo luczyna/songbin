@@ -52,52 +52,18 @@ export class YoutubePlayerComponent implements OnInit {
     this.loopingSub.unsubscribe();
   }
 
-  // ngOnChanges() {
-  //   // TODO update the segment when playback is done and it's not looping
-  //
-  //   if (this.segment) {
-  //     if (this.segment.playing) {
-  //       console.log('this is playing a song');
-  //       this.playSegment();
-  //     }
-  //
-  //     if (this.segment.loop) {
-  //       this.setUpSegmentEnd(true);
-  //     } else if (!this.segment.loop && this.timeout) {
-  //       window.clearTimeout(this.timeout);
-  //       this.timeout = null;
-  //     }
-  //   } else if (this.segment === null) {
-  //     // we don't have a segment to play
-  //     this.watchForPlaying = false;
-  //     this.stopVideo();
-  //   }
-  // }
-
-  ////// YT Player method abstractions
-  ////// for the sake of testing
-  public yt = {
-    getCurrentTime: (): number => {
-      return this.ytPlayer.getCurrentTime();
-    },
-    getDuration: (): number => {
-      return this.ytPlayer.getDuration();
-    },
-    getPlayerState: (): string => {
-      return YT.PlayerState[this.ytPlayer.getPlayerState()];
-    },
-    pauseVideo: (): void => {
-      this.ytPlayer.pauseVideo();
-    },
-    playVideo: (): void => {
-      this.ytPlayer.playVideo();
-    },
-    seekTo: (when: number, allowSeek?: boolean): void => {
-      this.ytPlayer.seekTo(when, allowSeek)
-    }
-  };
-
   ////// component logic
+  public describeEvent(event): string {
+    let state: string;
+
+    Object.keys(YT.PlayerState).forEach((key) => {
+      if (YT.PlayerState[key] === event.data) state = key;
+    });
+
+    // console.log('player state', event.data, state);
+    return state;
+  }
+
   public onStateChange(event) {
     let eventDesc = this.describeEvent(event);
     this.player.updatePlayerStatus(eventDesc);
@@ -111,11 +77,13 @@ export class YoutubePlayerComponent implements OnInit {
 
     // if (!this.watchForPlaying) return;
 
-    if (event.data === YT.PlayerState.PLAYING) {
+    // PLAYING
+    if (event.data === 1) {
       this.setUpSegmentEnd();
     }
 
-    if (event.data === YT.PlayerState.PAUSED) {
+    // PAUSED
+    if (event.data === 2) {
       if (this.segment && (this.isLooping || this.segment.loop)) {
         this.playSegment();
       } else {
@@ -143,19 +111,10 @@ export class YoutubePlayerComponent implements OnInit {
     this.duration = this.yt.getDuration();
   }
 
-  public setUpSegmentEnd(setFromNow:boolean = false) {
-    let beginning: number;
+  public setUpSegmentEnd() {
     let duration: number;
 
-    if (setFromNow) {
-      beginning = this.yt.getCurrentTime();
-    } else {
-      beginning = this.segment.start;
-    }
-
-    duration = this.segment.end - beginning;
-    // console.log('we will be stopping this in %s seconds', duration);
-
+    duration = this.segment.end - this.segment.start;
     duration *= 1000;
 
     this.timeout = window.setTimeout(() => this.stopVideo(), duration);
@@ -176,14 +135,26 @@ export class YoutubePlayerComponent implements OnInit {
     }
   }
 
-  private describeEvent(event): string {
-    let state: string;
-
-    Object.keys(YT.PlayerState).forEach((key) => {
-      if (YT.PlayerState[key] === event.data) state = key;
-    });
-
-    // console.log('player state', event.data, state);
-    return state;
-  }
+  ////// YT Player method abstractions
+  ////// for the sake of testing
+  public yt = {
+    getCurrentTime: (): number => {
+      return this.ytPlayer.getCurrentTime();
+    },
+    getDuration: (): number => {
+      return this.ytPlayer.getDuration();
+    },
+    getPlayerState: (): string => {
+      return YT.PlayerState[this.ytPlayer.getPlayerState()];
+    },
+    pauseVideo: (): void => {
+      this.ytPlayer.pauseVideo();
+    },
+    playVideo: (): void => {
+      this.ytPlayer.playVideo();
+    },
+    seekTo: (when: number, allowSeek?: boolean): void => {
+      this.ytPlayer.seekTo(when, allowSeek)
+    }
+  };
 }
