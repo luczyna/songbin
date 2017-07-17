@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { LocalStorageService } from 'ngx-store';
 
 import { Song } from '../models/song';
+import { Segment } from '../models/segment';
 import { SegmentsComponent } from './segments.component';
 import { SegmentComponent } from '../segment/segment.component';
 import { StorageService } from '../storage/storage.service';
@@ -124,6 +125,51 @@ describe('SegmentsComponent', () => {
 
     it('should have `end`', () => {
       expect(component.segmentForm.get('end')).not.toBeNull();
+    });
+  });
+
+  describe('removeSegment', () => {
+    it('should be available', () => {
+      expect(component.removeSegment).toBeDefined();
+    });
+
+    describe('when provided a valid id', () => {
+      beforeEach(() => {
+        component.song.segments.push(new Segment('test', 0, 1, 5));
+      });
+
+      it('should remove a segment from the list', () => {
+        component.removeSegment(0);
+        expect(component.song.segments.length).toBe(0);
+      });
+
+      it('should update the parent holding the song', () => {
+        spyOn(component.onUpdate, 'emit');
+        component.removeSegment(0);
+
+        expect(component.onUpdate.emit).toHaveBeenCalled();
+      });
+    });
+
+    describe('when provided a invalid id', () => {
+      let segmentCount: number;
+
+      beforeEach(() => {
+        component.song.segments.push(new Segment('test', 0, 1, 5));
+        segmentCount = component.song.segments.length;
+      });
+
+      it('should not remove any segments from the list', () => {
+        component.removeSegment(321);
+        expect(component.song.segments.length).toBe(segmentCount);
+      });
+
+      it('should not update the parent holding the song', () => {
+        spyOn(component.onUpdate, 'emit');
+        component.removeSegment(321);
+
+        expect(component.onUpdate.emit).not.toHaveBeenCalled();
+      });
     });
   });
 

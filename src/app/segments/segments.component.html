@@ -23,5 +23,5 @@
 
 <div>
   <app-segment *ngFor="let segment of song.segments"
-               [segment]="segment"></app-segment>
+               [segment]="segment" (onRemoveSegment)="removeSegment($event)"></app-segment>
 </div>

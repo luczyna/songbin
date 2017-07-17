@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit,
+         Input, Output, EventEmitter } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,6 +13,7 @@ import { PlayerService } from '../player/player.service';
 })
 export class SegmentComponent implements OnInit {
   @Input() segment: Segment;
+  @Output() onRemoveSegment = new EventEmitter();
 
   playerStatusSub: Subscription;
   activeLoopingSub: Subscription;
@@ -34,9 +36,13 @@ export class SegmentComponent implements OnInit {
     });
 
     this.activeSegmentSub = this.player.activeSegment.subscribe((segment) => {
-      // TODO consider putting an id on segment
-      this.isActiveSegment = (this.segment === segment);
-      this.disableInteractions = (segment === null) ? false : !this.isActiveSegment;
+      if (segment === null) {
+        this.isActiveSegment = false;
+        this.disableInteractions = false;
+      } else {
+        this.isActiveSegment = (this.segment.id === segment.id);
+        this.disableInteractions = !this.isActiveSegment;
+      }
     });
 
     this.activeLoopingSub = this.player.isSegmentLooping.subscribe((isLooping) => {
@@ -50,7 +56,9 @@ export class SegmentComponent implements OnInit {
     this.activeLoopingSub.unsubscribe();
   }
 
-  deleteSegment(): void {}
+  deleteSegment(): void {
+    this.onRemoveSegment.emit(this.segment.id);
+  }
 
   editSegment(): void {}
 
@@ -68,7 +76,8 @@ export class SegmentComponent implements OnInit {
   toggleLooping(): void {
     this.segment.loop = !this.segment.loop;
 
-    // while this MAY seem redundant (can a non-playing segment be active, truely)?
+    // while this MAY seem redundant
+    // (can a non-playing segment be active, truely)?
     // this double check is in place due to a check happening above
     // in this.playerStatusSub: Subscription
     //   we are checking to see if a non-looping segment

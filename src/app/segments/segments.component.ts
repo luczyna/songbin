@@ -64,12 +64,27 @@ export class SegmentsComponent implements OnInit {
     });
   }
 
+  removeSegment(segmentId): void {
+    let segmentIndex: number = null;
+
+    this.song.segments.forEach((segment, index) => {
+      if (segment.id === segmentId) {
+        segmentIndex = index;
+      }
+    })
+
+    if (segmentIndex === null) return;
+    this.song.segments.splice(segmentIndex, 1);
+    this.onUpdate.emit();
+  }
+
   saveSegment(): void {
     let name = this.segmentForm.get('name').value;
     let start = this.segmentForm.get('start').value;
     let end = this.segmentForm.get('end').value;
+    let id = this.song.segments.length + 1;
 
-    let newSegment: Segment = new Segment(name, start, end);
+    let newSegment: Segment = new Segment(name, id, start, end);
 
     this.song.segments.push(newSegment);
     this.onUpdate.emit();
