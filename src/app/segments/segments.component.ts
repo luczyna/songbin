@@ -16,6 +16,7 @@ import { Segment } from '../models/segment';
 export class SegmentsComponent implements OnInit {
   @Input() song: Song;
   @Output() onUpdate = new EventEmitter();
+
   segmentForm: FormGroup;
   showForm: boolean = false;
 

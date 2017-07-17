@@ -7,14 +7,17 @@ import 'rxjs/add/operator/switchMap';
 import { Song } from '../models/song';
 import { StorageService } from '../storage/storage.service';
 import { ConstantService } from '../constant/constant.service';
+import { PlayerService } from '../player/player.service';
 
 @Component({
   selector: 'app-song-detail',
   templateUrl: './song-detail.component.html',
-  styleUrls: ['./song-detail.component.scss']
+  styleUrls: ['./song-detail.component.scss'],
+  providers: [ PlayerService ]
 })
 export class SongDetailComponent implements OnInit {
   song: Song;
+
   editing: boolean = false;
   songForm: FormGroup;
   urlValidator: ValidatorFn;
@@ -22,6 +25,7 @@ export class SongDetailComponent implements OnInit {
   constructor(
     private constant: ConstantService,
     private formBuilder: FormBuilder,
+    private player: PlayerService,
     private route: ActivatedRoute,
     private router: Router,
     private storage: StorageService

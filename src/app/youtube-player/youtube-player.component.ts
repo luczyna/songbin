@@ -1,5 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { Subscription } from 'rxjs/Subscription';
+
+import { Segment } from '../models/segment';
+import { PlayerService } from '../player/player.service';
+
 @Component({
   selector: 'yt-player',
   templateUrl: './youtube-player.component.html',
@@ -7,105 +12,118 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class YoutubePlayerComponent implements OnInit {
   @Input() ytid: string;
-
   private id: string;
-  player: YT.Player;
 
   duration: number;
-  segments = [];
+  ytPlayer: YT.Player;
+  segment: Segment = null;
+  isLooping: boolean = null;
+  timeout: number;
+  // we set this to true to ensure we're watching user initiated events
   watchForPlaying: boolean = false;
 
-  constructor() { }
+  segmentSub: Subscription;
+  loopingSub: Subscription;
+
+  constructor(private player: PlayerService) {
+    this.segmentSub = this.player.activeSegment.subscribe((segment) => {
+      this.segment = segment;
+
+      if (segment !== null) {
+        this.isLooping = segment.loop;
+        if (segment.playing) this.playSegment();
+      } else {
+        this.isLooping = null;
+        this.stopVideo();
+      }
+    });
+
+    this.loopingSub = this.player.isSegmentLooping.subscribe((isLooping) => {
+      this.isLooping = isLooping;
+    })
+  }
 
   ngOnInit() {
     this.id = this.trimIdFromYTURL();
   }
 
-  ////// YT Player method abstractions
-  ////// for the sake of testing
-  public yt = {
-    getDuration: (): number => {
-      return this.player.getDuration();
-    },
-    getPlayerState: (): string => {
-      return YT.PlayerState[this.player.getPlayerState()];
-    },
-    pauseVideo: (): void => {
-      this.player.pauseVideo();
-    },
-    playVideo: (): void => {
-      this.player.playVideo();
-    },
-    seekTo: (when: number, allowSeek?: boolean): void => {
-      this.player.seekTo(when, allowSeek)
-    },
-    stopVideo: (): void => {
-      this.player.stopVideo();
-    }
-  };
+  ngOnDestroy() {
+    this.segmentSub.unsubscribe();
+    this.loopingSub.unsubscribe();
+  }
 
   ////// component logic
-  public onStateChange(event){
-    console.log('player state', event.data);
+  public describeEvent(event): string {
+    let state: string;
+
+    Object.keys(YT.PlayerState).forEach((key) => {
+      if (YT.PlayerState[key] === event.data) state = key;
+    });
+
+    // console.log('player state', event.data, state);
+    return state;
+  }
+
+  public onStateChange(event) {
+    let eventDesc = this.describeEvent(event);
+    this.player.updatePlayerStatus(eventDesc);
+
+    // user clicked one of the video controls... ???
+    if (!this.watchForPlaying && this.timeout) {
+      console.log('***** this was a non-watchForPlaying event *****');
+      window.clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+
+    // if (!this.watchForPlaying) return;
 
     // PLAYING
-    if (this.watchForPlaying && event.data === 1) {
-      console.log('we will be stopping this in 10 secinds');
-      window.setTimeout(() => this.yt.stopVideo(), 1000 * 10);
+    if (event.data === 1) {
+      this.setUpSegmentEnd();
     }
 
     // PAUSED
-    if (this.watchForPlaying && event.data === 2) {
-      // window.setTimeout(() => this.stopVideo);
+    if (event.data === 2) {
+      if (this.segment && (this.isLooping || this.segment.loop)) {
+        this.playSegment();
+      } else {
+        this.watchForPlaying = false;
+      }
     }
   }
 
-  public playSegment(segmentIndex: number) {
-    let segmentStart = this.segments[segmentIndex][0];
-
+  public playSegment() {
     if (this.yt.getPlayerState() === 'PLAYING') {
       this.yt.pauseVideo();
     }
 
-    this.yt.seekTo(segmentStart, false);
-
+    this.yt.seekTo(this.segment.start, true);
     this.watchForPlaying = true;
     this.yt.playVideo();
   }
 
-  // public prepareSegments(): void {
-  //   let start = 0;
-  //   let count = Math.floor(this.duration / 10);
-  //   let remainder;
-  //
-  //   for (var i = 0; i < count; i++) {
-  //     let seg = [];
-  //     start = i;
-  //     seg[0] = (i === 0) ? (start) : (start * 10) + 1
-  //     seg[1] = (start + 1) * 10;
-  //
-  //     this.segments.push(seg);
-  //   }
-  //
-  //   remainder = this.duration % 10;
-  //   if (remainder) {
-  //     this.segments.push([this.duration - remainder, this.duration]);
-  //   }
-  // }
-
   public savePlayer(player) {
-    this.player = player;
+    this.ytPlayer = player;
     this.setUpVideoInformation();
   }
 
   public setUpVideoInformation() {
     this.duration = this.yt.getDuration();
-    // this.prepareSegments();
+  }
+
+  public setUpSegmentEnd() {
+    let duration: number;
+
+    duration = this.segment.end - this.segment.start;
+    duration *= 1000;
+
+    this.timeout = window.setTimeout(() => this.stopVideo(), duration);
   }
 
   public stopVideo() {
-    this.yt.stopVideo();
-    this.watchForPlaying = false;
+    this.yt.pauseVideo();
+    if (this.timeout) window.clearTimeout(this.timeout);
+    this.timeout = null;
   }
 
   public trimIdFromYTURL(): string {
@@ -116,4 +134,27 @@ export class YoutubePlayerComponent implements OnInit {
       return this.ytid;
     }
   }
+
+  ////// YT Player method abstractions
+  ////// for the sake of testing
+  public yt = {
+    getCurrentTime: (): number => {
+      return this.ytPlayer.getCurrentTime();
+    },
+    getDuration: (): number => {
+      return this.ytPlayer.getDuration();
+    },
+    getPlayerState: (): string => {
+      return YT.PlayerState[this.ytPlayer.getPlayerState()];
+    },
+    pauseVideo: (): void => {
+      this.ytPlayer.pauseVideo();
+    },
+    playVideo: (): void => {
+      this.ytPlayer.playVideo();
+    },
+    seekTo: (when: number, allowSeek?: boolean): void => {
+      this.ytPlayer.seekTo(when, allowSeek)
+    }
+  };
 }

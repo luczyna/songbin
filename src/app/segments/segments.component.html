@@ -21,6 +21,7 @@
 
 <p *ngIf="!song.segments.length">no segments are added yet.</p>
 
-<ul>
-  <li *ngFor="let segment of song.segments; let i = index;">{{segment.name}}</li>
-</ul>
+<div>
+  <app-segment *ngFor="let segment of song.segments"
+               [segment]="segment"></app-segment>
+</div>

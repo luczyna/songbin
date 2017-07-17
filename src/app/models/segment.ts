@@ -1,4 +1,5 @@
 export class Segment {
+  // TODO consider putting an id on segment
   public name: string;
   public start: number;
   public end: number;

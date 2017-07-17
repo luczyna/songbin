@@ -5,6 +5,7 @@ import { LocalStorageService } from 'ngx-store';
 
 import { Song } from '../models/song';
 import { SegmentsComponent } from './segments.component';
+import { SegmentComponent } from '../segment/segment.component';
 import { StorageService } from '../storage/storage.service';
 
 describe('SegmentsComponent', () => {
@@ -15,7 +16,7 @@ describe('SegmentsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule, FormsModule ],
-      declarations: [ SegmentsComponent ]
+      declarations: [ SegmentsComponent, SegmentComponent ]
     })
     .compileComponents();
   }));
