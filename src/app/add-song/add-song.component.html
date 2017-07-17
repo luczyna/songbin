@@ -8,7 +8,8 @@
 
   <label class="form-group">
     <span class="label required"><strong>URL</strong> of the song on Youtube</span>
-    <span class="label error" *ngIf="formErrors.url.length && showUrlErrors">
+    <span class="label error" [@sliding]
+          *ngIf="formErrors.url.length && showUrlErrors">
       {{formErrors.url}}
     </span>
 
