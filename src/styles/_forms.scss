@@ -1,0 +1,49 @@
+.form-group {
+  display: block;
+  margin-bottom: 1em;
+
+  .label {
+    display: block;
+    margin: 0 0 0.5em;
+
+    &.required:after {
+      color: $blue-2;
+      background: $white-2;
+      padding: 2px 8px;
+      margin-left: 0.5em;
+      content: '*required';
+      font-size: 0.9em;
+      font-family: $font-monospace;
+    }
+
+    &.error {
+      background: lighten(red, 45%);
+      padding: 4px 4px;
+    }
+
+    strong {
+      color: $dark-1;
+    }
+  }
+
+  input[type=text],
+  input[type=url] {
+    font-size: 1em;
+    padding: 8px 4px;
+    width: calc(100% - 10px);
+    color: $dark-3;
+    background-color: $white-1;
+    border: 1px solid $dark-2;
+    outline-offset: 3px;
+    @include transition(all 0.2s ease-in);
+
+    &:focus {
+      outline: 1px solid $orange-1;
+      background-color: $white-2;
+    }
+  }
+
+  input[type=url] {
+    font-family: $font-monospace;
+  }
+}
