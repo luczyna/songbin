@@ -1,0 +1,9 @@
+@mixin section-boundary {
+  max-width: 40em;
+  padding: 0 2px;
+  margin: 0 auto;
+}
+
+@mixin transition($transition...) {
+  transition: $transition;
+}

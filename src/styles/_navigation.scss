@@ -1,0 +1,19 @@
+.site-header {
+  @include section-boundary;
+
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid $white-3;
+  padding-bottom: 10px;
+}
+
+ .site-title {
+   font-size: 1.25em;
+   margin: 0;
+
+   a {
+     color: $dark-1;
+     text-decoration: none;
+   }
+ }

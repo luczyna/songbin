@@ -1,0 +1,34 @@
+$button-padding: 2px 12px;
+
+a, button {
+  outline: 1px solid transparent;
+  outline-offset: 2px;
+
+  &:focus {
+    outline-color: $dark-2;
+  }
+}
+
+a {}
+
+button {
+  border-radius: 4px;
+}
+
+.link--as-button {
+  padding: $button-padding;
+  text-decoration: none;
+  border: 1px solid $green-2;
+  background: $white-1;
+  color: $green-2;
+
+  @include transition(all, 0.1s ease-in);
+
+  &:hover,
+  &:focus {
+    background-color: lighten($white-2, 2%);
+    border-color: darken($green-2, 20%);
+  }
+
+  &:visited {}
+}

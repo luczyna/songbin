@@ -1,10 +1,13 @@
-<header>
-  <h1><a routerLink="/">Songbin</a></h1>
+<header class="site-header">
+  <h1 class="site-title"><a routerLink="/">Songbin</a></h1>
+
+  <nav>
+    <a routerLink="/new" class="link--as-button">add a new song</a>
+  </nav>
 </header>
 
-<nav>
-  <a routerLink="/new">add a new song</a>
-  <button type="button" (click)="clearSavedSongs()" class="debug-item">clear songs</button>
-</nav>
+<!-- TODO move this to a settings page
+ <button type="button" (click)="clearSavedSongs()" class="debug-item">clear songs</button>
+-->
 
 <router-outlet></router-outlet>
