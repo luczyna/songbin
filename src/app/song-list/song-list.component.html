@@ -4,5 +4,10 @@
 </ul>
 
 <div *ngIf="!collection.length">
-  <p>Nothing has been saved yet. Let's <a routerLink="/new">go add a new song</a>.</p>
+  <p class="message--simple">There aren't any songs saved yet.</p>
+
+  <a routerLink="/new" class="link--mega-action">
+    <span class="mega-action--image">+</span>
+    <span class="mega-action--prompt">Let's go add a new song</span>
+  </a>
 </div>
