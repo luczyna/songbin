@@ -5,6 +5,6 @@
   <button type="button" (click)="toggleLooping()" [disabled]="disableInteractions">Toggle loop</button>
   <span>{{(segment.loop) ? 'looping' : 'not looping'}}</span>
   <input type="text" [value]="segment.name">
-  <button type="button" (click)="editSegment()" [disabled]="disableInteractions">Edit</button>
+  <!-- <button type="button" (click)="editSegment()" [disabled]="disableInteractions">Edit</button> -->
   <button type="button" (click)="deleteSegment()" [disabled]="disableInteractions">Delete</button>
 </div>

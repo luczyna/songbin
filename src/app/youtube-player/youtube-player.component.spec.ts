@@ -43,7 +43,7 @@ describe('YoutubePlayerComponent', () => {
       it('should restart the segment if it loops', () => {
         spyOn(component, 'playSegment');
 
-        component.segment = new Segment('test segment', 0, 10);
+        component.segment = new Segment('test segment', 1, 0, 10);
         component.isLooping = true;
         component.onStateChange({data: 2});
 
@@ -52,7 +52,7 @@ describe('YoutubePlayerComponent', () => {
 
       it('should reset watchForPlaying (to false) if the segment does not loop', () => {
         component.watchForPlaying = true;
-        component.segment = new Segment('test segment', 0, 10);
+        component.segment = new Segment('test segment', 1, 0, 10);
         component.isLooping = false;
         component.onStateChange({data: 2});
 
@@ -64,7 +64,7 @@ describe('YoutubePlayerComponent', () => {
       it('should set up the end of the segment', () => {
         spyOn(component, 'setUpSegmentEnd');
 
-        component.segment = new Segment('test segment', 0, 10);
+        component.segment = new Segment('test segment', 1, 0, 10);
         component.onStateChange({data: 1});
 
         expect(component.setUpSegmentEnd).toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('YoutubePlayerComponent', () => {
 
   describe('#playSegment', () => {
     beforeEach(() => {
-      component.segment = new Segment('test segment', 0, 2);
+      component.segment = new Segment('test segment', 1, 0, 2);
       // spy on these to allow tests to call this.player.#method
       spyOn(component.yt, 'seekTo');
       spyOn(component.yt, 'playVideo');
@@ -172,7 +172,7 @@ describe('YoutubePlayerComponent', () => {
 
     it('should start a timeout', () => {
       component.timeout = null;
-      component.segment = new Segment('test segment', 0, 10);
+      component.segment = new Segment('test segment', 1, 0, 10);
       component.setUpSegmentEnd();
 
       expect(component.timeout).not.toBeNull();

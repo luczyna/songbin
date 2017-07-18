@@ -19,7 +19,7 @@ describe('SegmentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SegmentComponent);
     component = fixture.componentInstance;
-    component.segment = new Segment('test segment', 1, 2);
+    component.segment = new Segment('test segment', 1, 1, 2);
     fixture.detectChanges();
   });
 
@@ -38,7 +38,7 @@ describe('SegmentComponent', () => {
       });
 
       it('should be false when this is not the active Segment', () => {
-        let rivalSegment = new Segment('another one!', 0, 0);
+        let rivalSegment = new Segment('another one!', 2, 0, 0);
         component.player.setActiveSegment(rivalSegment);
 
         expect(component.isActiveSegment).toBe(false);
@@ -101,7 +101,7 @@ describe('SegmentComponent', () => {
 
       describe('should be true (please disable)', () => {
         it('when there is a new active segment (a segment is playing), and this segment is not it', () => {
-          let rivalSegment = new Segment('another one!', 0, 0);
+          let rivalSegment = new Segment('another one!', 2, 0, 0);
           component.player.setActiveSegment(rivalSegment);
 
           expect(component.disableInteractions).toBe(true);
@@ -115,6 +115,14 @@ describe('SegmentComponent', () => {
     it('should be available', () => {
       expect(component.deleteSegment).toBeDefined();
     });
+
+    it('should send an Event with it\'s id', () => {
+      let checkId = component.segment.id;
+      spyOn(component.onRemoveSegment, 'emit');
+      component.deleteSegment();
+
+      expect(component.onRemoveSegment.emit).toHaveBeenCalledWith(checkId);
+    })
   });
 
   describe('#editSegment', () => {
