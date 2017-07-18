@@ -16,3 +16,10 @@ body {
 .main-content {
   @include section-boundary;
 }
+
+@for $i from 1 through 5 {
+  .spacer-left-#{$i} { margin-left: 4px * $i; }
+  .spacer-right-#{$i} { margin-right: 4px * $i; }
+  .spacer-top-#{$i} { margin-top: 4px * $i; }
+  .spacer-bottom-#{$i} { margin-bottom: 4px * $i; }
+}

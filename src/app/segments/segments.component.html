@@ -1,25 +1,33 @@
-<p><button type="button" (click)="toggleSegmentForm()">Add a segment</button></p>
+<p>
+  <strong class="spacer-right-3">Segments</strong>
+  <button type="button" class="button--simple" (click)="toggleSegmentForm()">
+    <span *ngIf="!showForm">Add a segment</span>
+    <span *ngIf="showForm">Cancel adding a segment</span>
+  </button>
+</p>
 
 <form [hidden]="!showForm" [formGroup]="segmentForm" (ngSubmit)="saveSegment()">
-  <label>
-    name
-    <input type="text" formControlName="name">
+  <label class="form-group">
+    <span class="label required"><strong>Name</strong> the segment</span>
+    <input type="text" formControlName="name" required>
   </label>
 
-  <label>
-    start
-    <input type="number" formControlName="start">
-  </label>
+  <div class="form-group-siblings">
+    <label class="form-group">
+      <span class="label required"><strong>Start</strong> of the segment (seconds)</span>
+      <input type="number" formControlName="start" required>
+    </label>
 
-  <label>
-    end
-    <input type="number" formControlName="end">
-  </label>
+    <label class="form-group">
+      <span class="label required"><strong>End</strong> of the segment (seconds)</span>
+      <input type="number" formControlName="end" required>
+    </label>
+  </div>
 
-  <button type="submit" [disabled]="segmentForm.status !== 'VALID'">save segment</button>
+  <button type="submit" class="button--main-action" [disabled]="segmentForm.status !== 'VALID'">save segment</button>
 </form>
 
-<p *ngIf="!song.segments.length">no segments are added yet.</p>
+<p *ngIf="!song.segments.length">No segments are added yet.</p>
 
 <div>
   <app-segment *ngFor="let segment of song.segments"
