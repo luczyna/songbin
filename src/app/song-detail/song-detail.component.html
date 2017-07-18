@@ -30,5 +30,5 @@
   </form>
 
   <yt-player [ytid]="song.getYTId()"></yt-player>
-  <app-segments [(song)]="song"></app-segments>
+  <app-segments [(song)]="song" (onUpdate)="updateSong()"></app-segments>
 </div>
