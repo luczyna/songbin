@@ -2,7 +2,7 @@ import { Song } from '../models/song';
 
 let song: Song;
 
-fdescribe('Song Model', () => {
+describe('Song Model', () => {
   describe('attributes', () => {
     beforeEach(makeSong);
 
