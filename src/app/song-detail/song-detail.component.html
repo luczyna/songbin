@@ -22,6 +22,6 @@
     </p>
   </form>
 
-  <yt-player [ytid]="song.url"></yt-player>
+  <yt-player [ytid]="song.getYTId()"></yt-player>
   <app-segments [(song)]="song"></app-segments>
 </div>

@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LocalStorageService } from 'ngx-store';
 import { YoutubePlayerModule } from 'ng2-youtube-player';
 
+import { Song } from '../models/song';
 import { SongDetailComponent } from './song-detail.component';
 import { MissingSongComponent } from '../missing-song/missing-song.component';
 import { SegmentsComponent } from '../segments/segments.component';
@@ -25,7 +26,7 @@ describe('SongDetailComponent', () => {
     id: string
   };
 
-  let sampleSong = {name: 'test', url: 'test.url', id: 'ABCDE', segments: []};
+  let sampleSong: Song = new Song('test', 'test.url', 'ABCDE');
 
   beforeEach(() => {
     importedModule.set('songs', [sampleSong]);

@@ -60,6 +60,8 @@ describe('AddSongComponent', () => {
 
     it('should revert the form', () => {
       spyOn(component, 'revert');
+      component.songForm.get('name').setValue('fake song');
+      component.songForm.get('url').setValue('fake.song');
       component.addingSong();
 
       expect(component.revert).toHaveBeenCalled();

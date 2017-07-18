@@ -43,9 +43,7 @@ export class YoutubePlayerComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
-    this.id = this.trimIdFromYTURL();
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.segmentSub.unsubscribe();
@@ -124,15 +122,6 @@ export class YoutubePlayerComponent implements OnInit {
     this.yt.pauseVideo();
     if (this.timeout) window.clearTimeout(this.timeout);
     this.timeout = null;
-  }
-
-  public trimIdFromYTURL(): string {
-    let ytURL = new RegExp(/http(s?):\/\/www.youtube.com\/watch\?v=/);
-    if (ytURL.test(this.ytid)) {
-      return this.ytid.replace(ytURL, '');
-    } else {
-      return this.ytid;
-    }
   }
 
   ////// YT Player method abstractions

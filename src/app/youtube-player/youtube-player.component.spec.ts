@@ -201,17 +201,4 @@ describe('YoutubePlayerComponent', () => {
       expect(component.timeout).toBe(null);
     });
   });
-
-  describe('#trimIdFromYTURL', () => {
-    it('should be available', () => {
-      expect(component.trimIdFromYTURL).toBeDefined();
-    });
-
-    it('should provide just the id from a browser youtube url', () => {
-      component.ytid = 'https://www.youtube.com/watch?v=KI0MHwGzl6U';
-      let result = component.trimIdFromYTURL();
-
-      expect(result).toBe('KI0MHwGzl6U');
-    });
-  });
 });
