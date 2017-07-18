@@ -1,5 +1,9 @@
 # Changelog
 
+### v0.0.3
+
+* **bug fix** if a user has manipulated their LocalStorage, still allow app to load
+
 ### v0.0.2
 
 * added functionality to remove segments from a song
