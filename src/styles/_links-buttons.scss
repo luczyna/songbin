@@ -2,48 +2,7 @@ $button-padding: 6px 12px;
 $button-padding-outline: 2px 12px;
 $button-radius: 4px;
 
-a, button {
-  outline: 1px solid transparent;
-  outline-offset: 2px;
-
-  &:focus {
-    outline-color: $dark-2;
-  }
-}
-
-a {
-  &:visited {
-    color: $blue-2;
-  }
-}
-
-button {
-  border-radius: $button-radius;
-}
-
-.link--as-button {
-  padding: $button-padding-outline;
-  text-decoration: none;
-  border-radius: $button-radius;
-  border: 1px solid $green-2;
-  background: $white-1;
-  color: $green-2;
-
-  @include transition(all, 0.1s ease-in);
-
-  &:hover,
-  &:focus {
-    background-color: lighten($white-2, 2%);
-    border-color: darken($green-2, 20%);
-  }
-
-  &:visited {}
-}
-
-.button--main-action {
-  padding: $button-padding;
-  font-size: 1em;
-
+@mixin action-buttons {
   border: 1px solid $green-2;
   background-color: $green-2;
   color: $white-1;
@@ -66,6 +25,73 @@ button {
   &:disabled:hover {
     cursor: not-allowed;
   }
+}
+
+a, button {
+  outline: 1px solid transparent;
+  outline-offset: 2px;
+
+  &:focus {
+    outline-color: $dark-2;
+  }
+}
+
+a {
+  &:visited {
+    color: $blue-2;
+  }
+}
+
+button {
+  font-size: 1em;
+  border-radius: $button-radius;
+}
+
+.link--as-button {
+  padding: $button-padding-outline;
+  text-decoration: none;
+  border-radius: $button-radius;
+  border: 1px solid $green-2;
+  background: $white-1;
+  color: $green-2;
+
+  @include transition(all, 0.1s ease-in);
+
+  &:hover,
+  &:focus {
+    background-color: lighten($white-2, 2%);
+    border-color: darken($green-2, 20%);
+  }
+
+  &:visited {}
+}
+
+.button--simple {
+  padding: $button-padding-outline;
+  border: 1px solid $green-2;
+  background: $white-1;
+  color: $green-2;
+
+  @include transition(all, 0.1s ease-in);
+
+  &:hover,
+  &:focus {
+    background-color: lighten($white-2, 2%);
+    border-color: darken($green-2, 20%);
+  }
+
+  &:visited {}
+}
+
+.button--action {
+  font-size: 1em;
+  padding: $button-padding-outline;
+  @include action-buttons;
+}
+
+.button--main-action {
+  padding: $button-padding;
+  @include action-buttons;
 }
 
 .link--mega-action {

@@ -17,10 +17,15 @@ import { PlayerService } from '../player/player.service';
 })
 export class SongDetailComponent implements OnInit {
   song: Song;
-
-  editing: boolean = false;
   songForm: FormGroup;
   urlValidator: ValidatorFn;
+
+  editing: boolean = false;
+  formErrors = {
+    name: '',
+    url: ''
+  };
+  showUrlErrors: boolean = false;
 
   constructor(
     private constant: ConstantService,
@@ -52,6 +57,8 @@ export class SongDetailComponent implements OnInit {
       name: [{value: this.song.name, disabled: true}, Validators.required],
       url: [{value: this.song.url, disabled: true}, this.urlValidator]
     });
+
+    this.songForm.valueChanges.subscribe(data => this.songFormChange(data));
   }
 
   public editSong() {
@@ -79,6 +86,20 @@ export class SongDetailComponent implements OnInit {
     this.createSongForm();
   }
 
+  public songFormChange(data: any): void {
+    if (!this.songForm) return;
+
+    // TODO how to simplify this between here and AddSongComponent?
+    // TODO looking only at the url... look at the name later
+    let control = this.songForm.get('url');
+    this.formErrors.url = '';
+
+    if (control.dirty && !control.valid) {
+      if (!control.value.length) this.formErrors.url += 'The URL is required. ';
+      this.formErrors.url += 'Please provide a valid URL.';
+    }
+  }
+
   public toggleEditing(): void {
     this.editing = !this.editing;
 
@@ -91,5 +112,9 @@ export class SongDetailComponent implements OnInit {
 
   public updateSong(): void {
     this.storage.saveSongs();
+  }
+
+  public updateUrlErrorVisibility(showErrors: boolean): void {
+    this.showUrlErrors = showErrors;
   }
 }

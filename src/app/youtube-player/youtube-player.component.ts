@@ -43,7 +43,9 @@ export class YoutubePlayerComponent implements OnInit {
     })
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.id = this.ytid;
+  }
 
   ngOnDestroy() {
     this.segmentSub.unsubscribe();
