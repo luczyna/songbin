@@ -50,13 +50,21 @@ export class StorageService {
     let songs: Array<Song> = [];
     let storedSongs = this.localStorage.get('songs');
 
-    if (storedSongs !== null) {
-      storedSongs.forEach((song) => {
-        let datum: Song = new Song(song.name, song.url, song.id, song.segments);
+    if (storedSongs === null) return songs;
+    if (typeof storedSongs === 'string') return songs;
+    if (!storedSongs.length) return songs;
 
+    storedSongs.forEach((song) => {
+      try {
+        let datum: Song = new Song(song.name, song.url, song.id, song.segments);
         songs.push(datum);
-      });
-    }
+      } catch (e) {
+        // TODO maybe notify users that they've got some corrupted data?
+        // saving songs over this corrupted data will blow away any previous saves
+        // console.log(e.message);
+        console.log('you may have some corrupted data stored for songs');
+      }
+    });
 
     return songs;
   }

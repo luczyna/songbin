@@ -20,6 +20,41 @@ describe('StorageService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('setting up the collection of songs', () => {
+    it('should have no songs if the localStorage key is not set', () => {
+      expect(service.collection.songs.length).toBe(0);
+    });
+
+    it('should have no songs if the localStorage value is empty', () => {
+      importedModule.set('songs', '');
+      service = new StorageService(importedModule);
+
+      expect(service.collection.songs.length).toBe(0);
+    });
+
+    it('should have no songs if the localStorage value is not an array', () => {
+      importedModule.set('songs', '  sdfsdf ');
+      service = new StorageService(importedModule);
+
+      expect(service.collection.songs.length).toBe(0);
+    });
+
+    it('should have no songs if the localStorage value is not properly foramtted', () => {
+      importedModule.set('songs', [
+        '  sdfsdf ',
+        { something: 'is not', right: true }
+      ]);
+      service = new StorageService(importedModule);
+
+      expect(service.collection.songs.length).toBe(0);
+    });
+
+    it('should have songs if the localStorage value is set with good data', () => {
+      createMockData();
+      expect(service.collection.songs.length).toBe(testData.length);
+    });
+  });
+
   describe('#getSongs', () => {
     it('should be available', () => {
       expect(service.getSongs).toBeDefined();
@@ -95,10 +130,7 @@ describe('StorageService', () => {
   });
 
   describe('#clearSongs', () => {
-    beforeEach(() => {
-      importedModule.set('songs', testData);
-      service = new StorageService(importedModule);
-    });
+    beforeEach(createMockData);
 
     it('should be available', () => {
       expect(service.clearSongs).toBeDefined();
