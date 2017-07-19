@@ -82,7 +82,7 @@ export class SegmentsComponent implements OnInit {
     let name = this.segmentForm.get('name').value;
     let start = this.segmentForm.get('start').value;
     let end = this.segmentForm.get('end').value;
-    let id = this.song.segments.length + 1;
+    let id = this.song.makeNewSegmentId();
 
     let newSegment: Segment = new Segment(name, id, start, end);
 
