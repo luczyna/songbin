@@ -75,7 +75,7 @@ export class YoutubePlayerComponent implements OnInit {
       this.timeout = null;
     }
 
-    // if (!this.watchForPlaying) return;
+    if (!this.watchForPlaying) return;
 
     // PLAYING
     if (event.data === 1) {

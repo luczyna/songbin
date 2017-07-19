@@ -40,6 +40,16 @@ export class Song {
       return this.url;
     }
   }
+
+  public makeNewSegmentId() {
+    // get the last segment added
+    // return it's id plus 1
+    let index = this.segments.length;
+    if (index === 0) return 1;
+    index--;
+
+    return this.segments[index].id + 1;
+  }
 }
 
 export class SongCollection {

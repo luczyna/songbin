@@ -1,4 +1,5 @@
-import { Song } from '../models/song';
+import { Song } from './song';
+import { Segment } from './segment';
 
 let song: Song;
 
@@ -82,6 +83,78 @@ describe('Song Model', () => {
         });
       });
     });
+  });
+
+  describe('#makeNewSegmentId', () => {
+    it('should be available', () => {
+      makeSong();
+      expect(song.makeNewSegmentId).toBeDefined();
+    });
+
+    it('should give us an initial id when there are no segments', () => {
+      makeSong();
+      expect(song.makeNewSegmentId()).toBe(1);
+    });
+
+    it('should give us 2 when there is 1 segment', () => {
+      let segment: Segment;
+      makeSong();
+
+      segment = new Segment('test', song.makeNewSegmentId(), 0, 2);
+      song.segments.push(segment);
+
+      expect(song.makeNewSegmentId()).toBe(2);
+    });
+
+    it('should give us a unique id when we delete the last segment', () => {
+      let segment: Segment;
+      let uniqueId: number;
+      let allAreUnique: boolean = true;
+      makeSong();
+
+      segment = new Segment('test', song.makeNewSegmentId(), 0, 2);
+      song.segments.push(segment);
+
+      segment = new Segment('test 2', song.makeNewSegmentId(), 0, 4);
+      song.segments.push(segment);
+
+      segment = new Segment('test 3', song.makeNewSegmentId(), 0, 6);
+      song.segments.push(segment);
+
+      song.segments.pop();
+      uniqueId = song.makeNewSegmentId();
+
+      song.segments.forEach((seg) => {
+        if (seg.id === uniqueId) allAreUnique = false;
+      });
+
+      expect(allAreUnique).toBe(true);
+    });
+
+    it('should give us a unique id when we delete any segment', () => {
+      let segment: Segment;
+      let uniqueId: number;
+      let allAreUnique: boolean = true;
+      makeSong();
+
+      segment = new Segment('test', song.makeNewSegmentId(), 0, 2);
+      song.segments.push(segment);
+
+      segment = new Segment('test 2', song.makeNewSegmentId(), 0, 4);
+      song.segments.push(segment);
+
+      segment = new Segment('test 3', song.makeNewSegmentId(), 0, 6);
+      song.segments.push(segment);
+
+      song.segments.splice(1, 1);
+      uniqueId = song.makeNewSegmentId();
+
+      song.segments.forEach((seg) => {
+        if (seg.id === uniqueId) allAreUnique = false;
+      });
+
+      expect(allAreUnique).toBe(true);
+    })
   });
 });
 
