@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { WebStorageModule } from 'ngx-store';
 import { YoutubePlayerModule } from 'ng2-youtube-player';
@@ -27,8 +28,9 @@ import { SegmentComponent } from './segment/segment.component';
     SegmentComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
+    BrowserModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     WebStorageModule,
     YoutubePlayerModule

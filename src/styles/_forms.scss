@@ -1,0 +1,63 @@
+.form-group {
+  display: block;
+  margin-bottom: 1em;
+
+  .label {
+    display: block;
+    margin: 0 0 0.5em;
+
+    &.required:after {
+      margin-left: 0.5em;
+      content: '*required';
+      @include helpful-label;
+    }
+
+    &.error {
+      background: lighten(red, 45%);
+      padding: 4px 4px;
+    }
+
+    strong {
+      color: $dark-1;
+    }
+  }
+}
+
+.form-group-siblings {
+  display: flex;
+  justify-content: space-between;
+  // always align to the bottom of the input box
+  align-items: flex-end;
+
+  .form-group {
+    flex: 0 0 47.5%;
+  }
+}
+
+input[type=text],
+input[type=url],
+input[type=number] {
+  font-size: 1em;
+  padding: 8px 4px;
+  // 10 = padding-left + padding-right + borders
+  width: calc(100% - 10px);
+  color: $dark-3;
+  background-color: $white-1;
+  border: 1px solid $dark-2;
+  outline-offset: 3px;
+  @include transition(all 0.2s ease-in);
+
+  &:focus {
+    outline: 1px solid $orange-1;
+    background-color: $white-2;
+  }
+
+  &.for-display:disabled {
+    border-color: $white-3;
+  }
+}
+
+input[type=url],
+input[type=number] {
+  font-family: $font-monospace;
+}

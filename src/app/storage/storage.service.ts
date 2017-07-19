@@ -62,7 +62,7 @@ export class StorageService {
         // TODO maybe notify users that they've got some corrupted data?
         // saving songs over this corrupted data will blow away any previous saves
         // console.log(e.message);
-        console.log('you may have some corrupted data stored for songs');
+        // console.log('you may have some corrupted data stored for songs');
       }
     });
 

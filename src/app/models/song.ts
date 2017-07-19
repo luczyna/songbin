@@ -27,6 +27,19 @@ export class Song {
     this.id = id;
     this.segments = segments;
   }
+
+  public getYTId() {
+    let ytURL = new RegExp(/http(s?):\/\/www.youtube.com\/watch\?v=/);
+    let ytShareURL = new RegExp(/(https?:\/\/youtu.be\/)(\w+)(\?t=.*)?/);
+
+    if (ytURL.test(this.url)) {
+      return this.url.replace(ytURL, '');
+    } else if (ytShareURL.test(this.url)) {
+      return this.url.replace(ytShareURL, '$2');
+    } else {
+      return this.url;
+    }
+  }
 }
 
 export class SongCollection {

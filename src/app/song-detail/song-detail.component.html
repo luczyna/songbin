@@ -1,27 +1,34 @@
 <div *ngIf="song">
   <form [formGroup]="songForm" (ngSubmit)="saveSongEdits()">
     <p>
-      <button type="button" (click)="toggleEditing()">
+      <button type="button" (click)="toggleEditing()" class="button--simple">
         {{editing ? 'cancel song edits' : 'edit song details'}}
       </button>
 
-      <button *ngIf="editing" type="submit" [disabled]="songForm.status !== 'VALID'">
+      <button *ngIf="editing" type="submit" class="button--action" [disabled]="songForm.status !== 'VALID'">
         save edits
       </button>
     </p>
 
-    <h3>
-      <input type="text" formControlName="name">
-    </h3>
+    <h3 [hidden]="editing">{{song.name}}</h3>
 
-    <p [hidden]="!editing">
-      <label>
-        song url
-        <input type="text" formControlName="url">
-      </label>
-    </p>
+    <label *ngIf="editing" class="form-group">
+      <span class="label required"><strong>Name</strong> the song</span>
+      <input type="text" formControlName="name" required>
+    </label>
+
+    <label *ngIf="editing" class="form-group">
+      <span class="label required"><strong>URL</strong> of the song on Youtube</span>
+      <span class="label error" *ngIf="formErrors.url.length && showUrlErrors">
+        {{formErrors.url}}
+      </span>
+
+      <input type="url" formControlName="url" required
+            (focus)="updateUrlErrorVisibility(false)"
+            (blur)="updateUrlErrorVisibility(true)">
+    </label>
   </form>
 
-  <yt-player [ytid]="song.url"></yt-player>
-  <app-segments [(song)]="song"></app-segments>
+  <yt-player [ytid]="song.getYTId()"></yt-player>
+  <app-segments [(song)]="song" (onUpdate)="updateSong()"></app-segments>
 </div>

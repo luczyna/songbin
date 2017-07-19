@@ -5,7 +5,7 @@ import { Song } from '../models/song';
 describe('StorageService', () => {
   let service: StorageService;
   let importedModule: LocalStorageService;
-  let testData = [ {name: 'test', url: 'fake.url', id: 'ABCDE', segments: []} ];
+  let testData = [ new Song('test', 'fake.url', 'ABCDE') ];
 
   beforeEach(() => {
     importedModule = new LocalStorageService();

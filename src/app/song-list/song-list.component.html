@@ -1,8 +1,18 @@
-<ul *ngIf="collection.length">
-  <li *ngFor="let song of collection">
-    <a [routerLink]="['/song', song.id]" title="go to {{song.name}}">{{song.name}}</a> - <code>{{song.url}}</code></li>
-</ul>
+<div *ngIf="collection.length" class="song-list">
+  <a *ngFor="let song of collection"
+     [routerLink]="['/song', song.id]"
+     title="go to {{song.name}}" class="song--in-list">
+    <img title="{{song.name}}" alt="youtube cover art for {{song.name}}" src="https://img.youtube.com/vi/{{song.getYTId()}}/sddefault.jpg">
+
+    {{song.name}}
+  </a>
+</div>
 
 <div *ngIf="!collection.length">
-  <p>Nothing has been saved yet. Let's <a routerLink="/new">go add a new song</a>.</p>
+  <p class="message--simple">There aren't any songs saved yet.</p>
+
+  <a routerLink="/new" class="link--mega-action">
+    <span class="mega-action--image">+</span>
+    <span class="mega-action--prompt">Let's go add a new song</span>
+  </a>
 </div>
