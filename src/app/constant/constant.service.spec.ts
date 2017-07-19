@@ -21,7 +21,7 @@ describe('ConstantService', () => {
     });
 
     it('should match a youtube URL', () => {
-      var testThis = [
+      let testThis = [
         // from URL
         'https://www.youtube.com/watch?v=P-BqmegCUpA',
         // from share button
