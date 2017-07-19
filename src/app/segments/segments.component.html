@@ -29,7 +29,18 @@
 
 <p *ngIf="!song.segments.length">No segments are added yet.</p>
 
-<div>
+<div *ngIf="song.segments.length" class="segment-list">
+  <div class="segment-header">
+    <span data-content="play">play/stop</span>
+    <span data-content="looping">looping?</span>
+    <span data-content="info">
+      <span data-content="name">segment name</span>
+      <span data-content="time">start</span>
+      <span data-content="time">end</span>
+    </span>
+    <span data-content="delete">delete</span>
+  </div>
+
   <app-segment *ngFor="let segment of song.segments"
                [segment]="segment" (onRemoveSegment)="removeSegment($event)"></app-segment>
 </div>

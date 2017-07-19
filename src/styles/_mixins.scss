@@ -1,9 +1,17 @@
 @mixin section-boundary {
-  max-width: 40em;
+  max-width: 50em;
   padding: 0 2px;
   margin: 0 auto;
 }
 
 @mixin transition($transition...) {
   transition: $transition;
+}
+
+@mixin helpful-label {
+  color: $blue-1;
+  background: $white-2;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  font-family: $font-monospace;
 }

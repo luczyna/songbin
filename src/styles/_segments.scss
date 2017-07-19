@@ -1,0 +1,83 @@
+.segment-list {
+  margin: 20px auto 40px;
+}
+
+.segment-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  font-size: 0.8em;
+  padding: 0 0 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px $white-3 solid;
+
+  span[data-content=name] {
+    flex: 2 0 50%;
+  }
+
+  span[data-content="delete"] {
+    text-align: right;
+  }
+}
+
+.segment {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+
+  .looping-label {
+    @include helpful-label;
+    padding: 2px 4px;
+  }
+
+  .segment-col[data-content="delete"] {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// sixing for the header and columns
+.segment-header span[data-content="play"],
+.segment-col[data-content="play"] {
+  flex: 0 0 10.5%;
+}
+
+.segment-header span[data-content="looping"],
+.segment-col[data-content="looping"] {
+  flex: 0 0 20%;
+}
+
+.segment-header span[data-content="info"],
+.segment-col[data-content="info"] {
+  flex: 2;
+
+  display: flex;
+  justify-content: space-between;
+
+  span,
+  input:not(:last-of-type) {
+    margin-right: 6px;
+  }
+
+  span[data-content=time],
+  input[type=number] {
+    flex: 1 2.5 auto;
+  }
+}
+
+// left most columns get the same margin
+.segment-header span[data-content="play"],
+.segment-col[data-content="play"],
+.segment-header span[data-content="looping"],
+.segment-col[data-content="looping"],
+.segment-header span[data-content="name"],
+.segment-col[data-content="name"] {
+  margin-right: 6px;
+}
+
+.segment-header span[data-content="delete"],
+.segment-col[data-content="delete"] {
+  flex: 0 0 7.5%;
+  margin-left: auto;
+}

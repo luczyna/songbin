@@ -94,6 +94,24 @@ button {
   @include action-buttons;
 }
 
+.button--interaction {
+  border: 1px $white-2 solid;
+  background-color: $white-1;
+  color: $blue-2;
+  @include transition(all 0.1s ease-in);
+
+  &:focus,
+  &:hover:not(:disabled) {
+    background-color: lighten($blue-1, 60%);
+  }
+
+  &:disabled {
+    background-color: $white-3;
+    color: $dark-4;
+    cursor: not-allowed;
+  }
+}
+
 .link--mega-action {
   max-width: 270px;
   display: block;

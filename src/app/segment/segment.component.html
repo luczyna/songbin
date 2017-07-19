@@ -1,10 +1,25 @@
-<div>
-  <button type="button" (click)="playSegment()" [disabled]="disableInteractions">
-    <span>{{(segment.playing) ? 'Stop' : 'Play'}}</span>
-  </button>
-  <button type="button" (click)="toggleLooping()" [disabled]="disableInteractions">Toggle loop</button>
-  <span>{{(segment.loop) ? 'looping' : 'not looping'}}</span>
-  <input type="text" [value]="segment.name">
+<div class="segment">
+  <div class="segment-col" data-content="play">
+    <button type="button" class="button--interaction" (click)="playSegment()" [disabled]="disableInteractions">
+      <span>{{(segment.playing) ? '&#9724;' : '&#9654;'}}</span>
+    </button>
+  </div>
+
+  <div class="segment-col" data-content="looping">
+    <button type="button" class="button--interaction" (click)="toggleLooping()" [disabled]="disableInteractions">&#8635;</button>
+
+    <span class="looping-label">{{(segment.loop) ? 'looping' : 'not looping'}}</span>
+  </div>
+
+  <div class="segment-col" data-content="info">
+    <input type="text" class="for-display" [value]="segment.name" disabled>
+    <input type="number" class="for-display" [value]="segment.start" disabled>
+    <input type="number" class="for-display" [value]="segment.end" disabled>
+  </div>
+
   <!-- <button type="button" (click)="editSegment()" [disabled]="disableInteractions">Edit</button> -->
-  <button type="button" (click)="deleteSegment()" [disabled]="disableInteractions">Delete</button>
+
+  <div class="segment-col" data-content="delete">
+    <button type="button" class="button--interaction" (click)="deleteSegment()" [disabled]="disableInteractions">&times;</button>
+  </div>
 </div>
