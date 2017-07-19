@@ -57,6 +57,7 @@ export class SegmentComponent implements OnInit {
   }
 
   deleteSegment(): void {
+    if (this.segment.playing) this.playSegment();
     this.onRemoveSegment.emit(this.segment.id);
   }
 
