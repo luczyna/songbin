@@ -1,5 +1,11 @@
 # Changelog
 
+### v0.1.0
+
+* **bug fix** do not stop a video with timeout if user initiated playback with youtube player controls
+* **bug fix** stopped zombie playback of playing/looping segment that was deleted
+* **bug fix** improved `Segment.id` assignment, so we don't have duplicates
+
 ### v0.0.4
 
 * **bug fix** allowed new segments to be saved (again)
