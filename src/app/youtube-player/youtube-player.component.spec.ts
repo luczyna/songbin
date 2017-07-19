@@ -44,6 +44,7 @@ describe('YoutubePlayerComponent', () => {
         spyOn(component, 'playSegment');
 
         component.segment = new Segment('test segment', 1, 0, 10);
+        component.watchForPlaying = true;
         component.isLooping = true;
         component.onStateChange({data: 2});
 
@@ -60,11 +61,15 @@ describe('YoutubePlayerComponent', () => {
       });
     });
 
-    describe('when the video is playing', () => {
+    describe('when the video is played', () => {
       it('should set up the end of the segment', () => {
         spyOn(component, 'setUpSegmentEnd');
+        spyOn(component.yt, 'seekTo');
+        spyOn(component.yt, 'playVideo');
+        spyOn(component.yt, 'getPlayerState');
 
         component.segment = new Segment('test segment', 1, 0, 10);
+        component.playSegment();
         component.onStateChange({data: 1});
 
         expect(component.setUpSegmentEnd).toHaveBeenCalled();
