@@ -15,6 +15,7 @@ import { MissingSongComponent } from './missing-song/missing-song.component';
 import { YoutubePlayerComponent } from './youtube-player/youtube-player.component';
 import { SegmentsComponent } from './segments/segments.component';
 import { SegmentComponent } from './segment/segment.component';
+import { UnknownPageComponent } from './unknown-page/unknown-page.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SegmentComponent } from './segment/segment.component';
     MissingSongComponent,
     YoutubePlayerComponent,
     SegmentsComponent,
-    SegmentComponent
+    SegmentComponent,
+    UnknownPageComponent
   ],
   imports: [
     AppRoutingModule,
