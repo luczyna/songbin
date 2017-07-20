@@ -1,5 +1,10 @@
 # Changelog
 
+### v0.1.1
+
+* added a new component to handle unknown route requests
+* set up continuous integration with Heroku deployments
+
 ### v0.1.0
 
 * **bug fix** do not stop a video with timeout if user initiated playback with youtube player controls
