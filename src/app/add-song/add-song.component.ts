@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,
          Validators, ValidatorFn } from '@angular/forms';
-import { trigger, state, style,
-         animate, transition } from '@angular/animations';
 
 import { Song } from '../models/song';
+import { getSlideAnimations } from '../animations';
 import { StorageService } from '../storage/storage.service';
 import { ConstantService } from '../constant/constant.service';
 
@@ -12,7 +11,7 @@ import { ConstantService } from '../constant/constant.service';
   selector: 'app-add-song',
   templateUrl: './add-song.component.html',
   styleUrls: ['./add-song.component.scss'],
-  animations: [ getUrlErrorAnimations() ]
+  animations: [ getSlideAnimations() ]
 })
 
 export class AddSongComponent implements OnInit {
@@ -84,18 +83,4 @@ export class AddSongComponent implements OnInit {
   updateUrlErrorVisibility(toWhat: boolean) {
     this.showUrlErrors = toWhat;
   }
-}
-
-function getUrlErrorAnimations() {
-  // https://angular.io/guide/animations#example-entering-and-leaving
-  return trigger('sliding', [
-    state('in', style({transform: 'translateX(0)'})),
-    transition(':enter', [
-      style({transform: 'translateX(-100%)'}),
-      animate(150)
-    ]),
-    transition(':leave', [
-      animate(150, style({transform: 'translateX(100%)'}))
-    ])
-  ])
 }

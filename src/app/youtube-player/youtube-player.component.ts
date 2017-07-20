@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -10,9 +10,10 @@ import { PlayerService } from '../player/player.service';
   templateUrl: './youtube-player.component.html',
   styleUrls: ['./youtube-player.component.scss']
 })
-export class YoutubePlayerComponent implements OnInit {
+export class YoutubePlayerComponent implements OnInit, OnDestroy {
   @Input() ytid: string;
-  private id: string;
+  // https://github.com/orizens/ng2-youtube-player/issues/5
+  id: string;
 
   duration: number;
   ytPlayer: YT.Player;

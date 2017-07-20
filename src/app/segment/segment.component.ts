@@ -1,4 +1,4 @@
-import { Component, OnInit,
+import { Component, OnInit, OnDestroy,
          Input, Output, EventEmitter } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -11,7 +11,7 @@ import { PlayerService } from '../player/player.service';
   templateUrl: './segment.component.html',
   styleUrls: ['./segment.component.scss']
 })
-export class SegmentComponent implements OnInit {
+export class SegmentComponent implements OnInit, OnDestroy {
   @Input() segment: Segment;
   @Output() onRemoveSegment = new EventEmitter();
 
