@@ -1,0 +1,19 @@
+machine:
+  timezone:
+    America/Chicago
+  node:
+    version: v6.10.3
+
+dependancies:
+  cache_directories:
+    - 'node_modules'
+
+test:
+  override:
+    - npm run test-ci
+
+deployment:
+  staging:
+    branch: dev
+    heroku:
+      appname: dev-songbin
